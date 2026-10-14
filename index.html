@@ -1,0 +1,83 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#1769e0">
+<title>Nashe Bloom</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f3f7ff;color:#172b4d}
+header{background:#1769e0;color:white;padding:24px 18px;border-radius:0 0 25px 25px}
+.bird{font-size:36px}
+h1{margin:5px 0;font-size:28px}
+header p{margin:7px 0 0;color:#e1ecff}
+main{padding:18px;max-width:600px;margin:auto}
+h2{font-size:21px}
+.menu{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.card{background:white;border:1px solid #e0eaff;border-radius:17px;padding:17px 12px;text-align:left;color:#17376b;font-size:16px;font-weight:bold;box-shadow:0 3px 10px #153d7910}
+.card span{display:block;font-size:27px;margin-bottom:9px}
+.panel{background:white;margin-top:17px;padding:17px;border-radius:17px}
+input,textarea{width:100%;padding:12px;border:1px solid #cbd9f3;border-radius:10px;font-size:16px;margin:6px 0}
+button.action{background:#1769e0;color:white;border:0;border-radius:10px;padding:12px 15px;font-size:15px;margin:5px 0}
+li{padding:8px 0;overflow-wrap:anywhere}
+li button{margin-left:8px}
+small{color:#64748b}
+</style>
+</head>
+<body>
+<header>
+<div class="bird">🐦</div>
+<h1>Nashe Bloom</h1>
+<p>Pequeños pasos, grandes cambios 💙</p>
+</header>
+<main>
+<h2>¿Qué vamos a hacer hoy?</h2>
+<div class="menu">
+<button class="card" onclick="show('Ejercicios')"><span>🏋️</span>Ejercicios</button>
+<button class="card" onclick="show('Hábitos diarios')"><span>🌱</span>Hábitos diarios</button>
+<button class="card" onclick="show('Pendientes')"><span>✅</span>Pendientes</button>
+<button class="card" onclick="show('Progreso')"><span>📈</span>Progreso</button>
+<button class="card" onclick="show('Notas personales')"><span>📝</span>Notas personales</button>
+</div>
+<section class="panel" id="panel">
+<h2>Tu espacio personal 💙</h2>
+<p>Elige una sección para comenzar a florecer.</p>
+</section>
+<small>Tus pequeños avances también cuentan ✨</small>
+</main>
+<script>
+const panel=document.getElementById('panel');
+let data={};
+try{data=JSON.parse(localStorage.getItem('nasheBloom')||'{}')}catch(e){}
+function save(){localStorage.setItem('nasheBloom',JSON.stringify(data))}
+function show(section){
+panel.innerHTML='<h2>'+section+'</h2>';
+if(section==='Progreso'){
+let total=Object.values(data).reduce((n,a)=>n+(Array.isArray(a)?a.filter(x=>x.done).length:0),0);
+panel.innerHTML+='<p>¡Llevas '+total+' tareas completadas! 🌟</p>';
+return;
+}
+panel.innerHTML+='<form id="form"><input id="entry" placeholder="Escribe aquí..." required><button class="action">Agregar</button></form><ul id="items"></ul>';
+const form=document.getElementById('form'),entry=document.getElementById('entry'),items=document.getElementById('items');
+if(!Array.isArray(data[section]))data[section]=[];
+function render(){
+items.innerHTML='';
+data[section].forEach((item,i)=>{
+const li=document.createElement('li'),label=document.createElement('label'),check=document.createElement('input'),del=document.createElement('button');
+check.type='checkbox';check.checked=!!item.done;check.style.width='auto';check.style.marginRight='8px';
+check.onchange=()=>{item.done=check.checked;save();render()};
+label.append(check,document.createTextNode(item.text));
+if(item.done)label.style.textDecoration='line-through';
+del.textContent='Eliminar';del.className='action';del.type='button';
+del.onclick=()=>{data[section].splice(i,1);save();render()};
+li.append(label,del);items.append(li);
+});
+}
+form.onsubmit=e=>{e.preventDefault();data[section].push({text:entry.value,done:false});save();entry.value='';render()};
+render();
+}
+</script>
+</body>
+</html>
