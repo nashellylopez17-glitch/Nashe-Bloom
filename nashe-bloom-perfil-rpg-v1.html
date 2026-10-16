@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Nashe Bloom · Crea tu aventura</title>
+<style>
+:root{color-scheme:dark;--blue:#164de0;--violet:#4b2bbd;--pale:#eef3ff;--muted:#667397}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:linear-gradient(145deg,#0b1748,#253da3 55%,#382080);color:#fff}
+header{padding:20px 18px 14px;display:flex;align-items:center;gap:12px}
+.logo{font-size:35px;color:#a7dcff}h1{font-size:23px;margin:0}.tag{font-size:10px;letter-spacing:3px;opacity:.82;margin-top:2px}
+main{padding:8px 14px 32px;max-width:760px;margin:auto}
+.hero{padding:20px;border:1px solid #8ba6ff55;border-radius:24px;background:linear-gradient(135deg,#2846a7,#39237e);margin-bottom:16px}
+.eyebrow{font-size:11px;letter-spacing:2px;font-weight:800;color:#c9eaff}
+h2{font-size:24px;line-height:1.15;margin:9px 0}
+p{line-height:1.5;margin:8px 0}
+.card{background:#f1f4ff;color:#172653;border-radius:25px;padding:17px;margin-bottom:15px}
+.muted{color:var(--muted)}.row{display:flex;align-items:center;gap:10px}.between{justify-content:space-between}
+label.field{display:block;font-weight:750;margin:12px 0 6px}
+input[type=text]{width:100%;padding:13px 14px;border:1px solid #c8d3f0;border-radius:13px;background:white;color:#172653;font-size:16px}
+.choices{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:8px}
+.choice{padding:12px 7px;border:1px solid #c8d3f0;border-radius:14px;text-align:center;background:#fff;color:#263969;font-weight:700}
+.choice input{accent-color:#234de0}.choice:has(input:checked){background:#e3ebff;border-color:#315de2;box-shadow:0 0 0 1px #315de2}
+button{border:1px solid #b5c7ff;background:#fff;color:#17367f;border-radius:22px;padding:12px 15px;font-size:14px;font-weight:750}
+button.primary{background:#244bd0;color:white;border-color:#244bd0;width:100%;margin-top:16px}
+button.secondary{padding:8px 11px;font-size:12px}
+.level{font-weight:800;color:#1c48c2;font-size:15px}
+.xpbar{height:12px;background:#d9e1fa;border-radius:20px;overflow:hidden;margin:10px 0 5px}
+.xpfill{height:100%;width:0;background:linear-gradient(90deg,#164de0,#6b55ef);border-radius:20px;transition:width .25s}
+.sectiontitle{font-size:20px;margin:0 0 5px}
+.task{display:flex;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid #dce3f6}
+.task:last-child{border-bottom:0}
+.task input{width:22px;height:22px;accent-color:#254ce2;flex-shrink:0}
+.taskname{font-weight:750}.taskdesc{font-size:13px;color:#68769a}.points{margin-left:auto;color:#244bd0;font-weight:800;white-space:nowrap}
+#viewer{height:min(52vh,430px);min-height:290px;background:#101943;border-radius:20px;overflow:hidden;position:relative;border:1px solid #d9e4ff}
+canvas{display:block;width:100%;height:100%}.pill{position:absolute;top:12px;left:12px;background:#0a163dcc;border:1px solid #ffffff33;border-radius:22px;padding:8px 11px;font-size:11px;color:white;z-index:2}
+.status{font-size:13px;color:#53658c;margin:8px 0}
+.rewardgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:12px}
+.reward{border:1px solid #d6def4;border-radius:16px;padding:12px;background:#fff}
+.reward .emoji{font-size:26px}.reward strong{display:block;font-size:14px;margin:4px 0}
+.reward small{display:block;color:#6b789a;line-height:1.4}.reward.locked{background:#e7ebf7;color:#6f7894}.reward.unlocked{border-color:#6a8df0;background:#e8efff}
+#toast{font-size:13px;color:#2449bf;font-weight:700;min-height:20px;margin-top:8px}
+.note{font-size:12px;color:#657397;margin-top:12px}
+.hidden{display:none!important}
+footer{text-align:center;font-size:12px;color:#d7e4ff;padding:0 12px 18px}
+@media(min-width:620px){.rewardgrid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+</style>
+<script type="importmap">
+{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}
+</script>
+</head>
+<body>
+<header><div class="logo">✦</div><div><h1>Nashe Bloom</h1><div class="tag">YOUR STORY AWAKENS</div></div></header>
+<main>
+<section class="hero">
+<div class="eyebrow">✦ TU PROGRESO, TU AVENTURA ✦</div>
+<h2 id="heroTitle">Crea tu aventura</h2>
+<p id="heroText">Elige tu identidad y empieza a convertir tus objetivos diarios en experiencia para tu personaje.</p>
+</section>
+
+<section class="card" id="profileCard">
+<h2 class="sectiontitle">🪄 Crea tu perfil de aventurera</h2>
+<p class="muted">Esta es una prueba local: crea un perfil de demostración en este navegador. No crea una cuenta en internet.</p>
+<label class="field" for="adventurerName">Nombre de aventurero</label>
+<input id="adventurerName" type="text" maxlength="28" value="Aventurera" placeholder="Ej. Aventurera">
+<label class="field" for="characterName">Nombre de tu personaje</label>
+<input id="characterName" type="text" maxlength="28" value="Nashael" placeholder="Ej. Nashael">
+<label class="field">Elige tu clase inicial</label>
+<div class="choices">
+<label class="choice"><input type="radio" name="class" value="Arquera" checked> 🏹<br>Arquera</label>
+<label class="choice"><input type="radio" name="class" value="Guerrera"> ⚔️<br>Guerrera</label>
+<label class="choice"><input type="radio" name="class" value="Maga"> ✨<br>Maga</label>
+</div>
+<button class="primary" id="createProfile">Comenzar aventura ✨</button>
+</section>
+
+<section id="game" class="hidden">
+<section class="card">
+<div class="row between"><h2 class="sectiontitle">🌿 Hola, <span id="greetName">Aventurera</span></h2><button class="secondary" id="editProfile">Editar perfil</button></div>
+<p class="muted">Tu personaje: <strong id="characterLabel">Nashael</strong> · <span id="classLabel">Arquera</span></p>
+<div class="row between"><h2 class="sectiontitle">✨ Tu progreso</h2><span class="level" id="levelLabel">Nivel 1</span></div>
+<div class="row between"><span class="muted" id="xpLabel">0 XP total</span><span class="muted" id="nextLabel">50 XP para nivel 2</span></div>
+<div class="xpbar"><div class="xpfill" id="xpFill"></div></div>
+<p class="muted" id="progressText">Tu aventura acaba de comenzar.</p>
+</section>
+
+<section class="card">
+<h2 class="sectiontitle">🌱 Mis objetivos de hoy</h2>
+<p class="muted">Marca un objetivo cuando lo completes. Cada uno da XP una sola vez al día.</p>
+<div class="task"><input type="checkbox" id="water"><label for="water"><div class="taskname">💧 Beber 2 litros de agua</div><div class="taskdesc">Cuidar tu cuerpo · objetivo diario</div></label><span class="points">+20 XP</span></div>
+<div class="task"><input type="checkbox" id="read"><label for="read"><div class="taskname">📖 Leer 3 páginas</div><div class="taskdesc">Alimentar tu mente · objetivo diario</div></label><span class="points">+15 XP</span></div>
+<div class="task"><input type="checkbox" id="move"><label for="move"><div class="taskname">🏹 Completar tu ejercicio</div><div class="taskdesc">Moverte y practicar · objetivo diario</div></label><span class="points">+25 XP</span></div>
+<div id="toast" aria-live="polite"></div>
+</section>
+
+<section class="card">
+<h2 class="sectiontitle">🏹 <span id="modelCharacterName">Nashael</span></h2>
+<p class="muted">Modelo 3D base · arrastra para girar</p>
+<div id="viewer"><div class="pill">VISOR 3D</div></div>
+<div id="status" class="status">Preparando personaje…</div>
+<button id="spin">⟳ Girar automáticamente</button>
+</section>
+
+<section class="card">
+<h2 class="sectiontitle">🎁 Recompensas de evolución</h2>
+<p class="muted">Al subir de nivel, se desbloquean opciones para tu personaje. En esta prueba puedes marcar recompensas como seleccionadas; conectar los cambios visuales reales será la siguiente fase.</p>
+<div class="rewardgrid" id="rewards"></div>
+<p class="note">El perfil y el progreso se guardan en este navegador. Aún no hay registro en línea ni sincronización entre dispositivos.</p>
+</section>
+</section>
+</main>
+<footer>Nashe Bloom · Un paso real a la vez 💙</footer>
+<script>
+const PROFILE_KEY='nasheBloom_profile_demo_v1';
+const STATE_KEY='nasheBloom_rpg_profile_progress_v1';
+const today=()=>new Date().toLocaleDateString('en-CA');
+const emptyState=()=>({date:today(),xp:0,checks:{water:false,read:false,move:false},owned:[],equipped:null});
+let profile=null,state=emptyState();
+try{profile=JSON.parse(localStorage.getItem(PROFILE_KEY)||'null')}catch(e){}
+try{state=JSON.parse(localStorage.getItem(STATE_KEY)||'null')||emptyState()}catch(e){state=emptyState()}
+if(!state||typeof state!=='object')state=emptyState();
+if(state.date!==today()){state.date=today();state.checks={water:false,read:false,move:false};}
+if(!state.checks)state.checks={water:false,read:false,move:false};
+if(!Array.isArray(state.owned))state.owned=[];
+if(typeof state.xp!=='number')state.xp=0;
+const tasks={water:20,read:15,move:25};
+const rewards=[
+{id:'hair',level:2,emoji:'💙',name:'Cabello azul eléctrico',desc:'Nuevo estilo para tu personaje.'},
+{id:'armor',level:3,emoji:'🛡️',name:'Armadura azul y plateada',desc:'Equipo de guardiana.'},
+{id:'aura',level:4,emoji:'✨',name:'Aura mágica azul',desc:'Efecto especial de energía.'},
+{id:'bow',level:5,emoji:'🏹',name:'Arco de energía',desc:'Una recompensa de arquera.'},
+{id:'crown',level:6,emoji:'👑',name:'Diadema de élite',desc:'Símbolo de constancia.'}
+];
+function levelFor(xp){if(xp>=500)return 6;if(xp>=350)return 5;if(xp>=230)return 4;if(xp>=120)return 3;if(xp>=50)return 2;return 1}
+function floorXP(l){return ({1:0,2:50,3:120,4:230,5:350,6:500})[l]||500}
+function ceilXP(l){return ({1:50,2:120,3:230,4:350,5:500,6:650})[l]||650}
+function save(){localStorage.setItem(STATE_KEY,JSON.stringify(state))}
+function render(){
+ if(!profile)return;
+ document.getElementById('profileCard').classList.add('hidden');document.getElementById('game').classList.remove('hidden');
+ document.getElementById('heroTitle').textContent='Tu aventura comienza, '+profile.character;
+ document.getElementById('heroText').textContent=profile.adventurer+' · '+profile.kind+' · Cada objetivo cumplido te acerca a nuevas recompensas.';
+ document.getElementById('greetName').textContent=profile.adventurer;
+ document.getElementById('characterLabel').textContent=profile.character;
+ document.getElementById('modelCharacterName').textContent=profile.character;
+ document.getElementById('classLabel').textContent=profile.kind;
+ const lvl=levelFor(state.xp),low=floorXP(lvl),high=ceilXP(lvl);
+ document.getElementById('levelLabel').textContent='Nivel '+lvl;
+ document.getElementById('xpLabel').textContent=state.xp+' XP total';
+ document.getElementById('nextLabel').textContent=state.xp>=high?'¡Nivel máximo de prueba!':(high-state.xp)+' XP para nivel '+(lvl+1);
+ document.getElementById('xpFill').style.width=Math.min(100,((state.xp-low)/(high-low))*100)+'%';
+ document.getElementById('progressText').textContent=lvl===1?'Tu aventura acaba de comenzar.':lvl<3?'¡Vas creciendo! Sigue acumulando XP.':'¡Tu constancia está haciendo evolucionar a '+profile.character+'!';
+ for(const id of Object.keys(tasks)){const el=document.getElementById(id);el.checked=!!state.checks[id];el.disabled=!!state.checks[id];}
+ const area=document.getElementById('rewards');area.innerHTML='';
+ rewards.forEach(r=>{
+  const unlocked=lvl>=r.level||state.owned.includes(r.id);
+  const div=document.createElement('div');div.className='reward '+(unlocked?'unlocked':'locked');
+  div.innerHTML='<div class="emoji">'+(unlocked?r.emoji:'🔒')+'</div><strong>'+r.name+'</strong><small>'+(unlocked?'Desbloqueado · Nivel '+r.level:'Se abre en nivel '+r.level)+'</small>';
+  if(unlocked){const b=document.createElement('button');b.textContent=state.equipped===r.id?'Seleccionado ✓':'Seleccionar';b.onclick=()=>{state.equipped=r.id;save();render();document.getElementById('toast').textContent='Recompensa seleccionada. La personalización visual real llegará en la siguiente fase.'};div.appendChild(b)}
+  area.appendChild(div);
+ });
+}
+document.getElementById('createProfile').addEventListener('click',()=>{
+ const adventurer=document.getElementById('adventurerName').value.trim()||'Aventurera';
+ const character=document.getElementById('characterName').value.trim()||'Mi personaje';
+ const kind=document.querySelector('input[name="class"]:checked').value;
+ profile={adventurer,character,kind};
+ localStorage.setItem(PROFILE_KEY,JSON.stringify(profile));save();render();
+});
+document.getElementById('editProfile').addEventListener('click',()=>{
+ document.getElementById('adventurerName').value=profile.adventurer;document.getElementById('characterName').value=profile.character;
+ document.querySelectorAll('input[name="class"]').forEach(el=>el.checked=el.value===profile.kind);
+ document.getElementById('game').classList.add('hidden');document.getElementById('profileCard').classList.remove('hidden');
+ document.getElementById('heroTitle').textContent='Edita tu aventura';document.getElementById('heroText').textContent='Cambia tu nombre o clase para esta prueba.';
+});
+Object.entries(tasks).forEach(([id,points])=>document.getElementById(id).addEventListener('change',e=>{
+ if(e.target.checked&&!state.checks[id]){state.checks[id]=true;state.xp+=points;save();render();document.getElementById('toast').textContent='¡+'+points+' XP! Objetivo completado. 💙';}
+}));
+if(profile){document.getElementById('adventurerName').value=profile.adventurer;document.getElementById('characterName').value=profile.character;document.querySelectorAll('input[name="class"]').forEach(el=>el.checked=el.value===profile.kind);render()}
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
+import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
+const box=document.getElementById('viewer'),status=document.getElementById('status');
+const scene=new THREE.Scene();scene.background=new THREE.Color(0x101943);
+const camera=new THREE.PerspectiveCamera(35,box.clientWidth/box.clientHeight,.1,1000);camera.position.set(0,1.55,4.7);
+const renderer=new THREE.WebGLRenderer({antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio||1,2));renderer.setSize(box.clientWidth,box.clientHeight);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.15;box.appendChild(renderer.domElement);
+scene.add(new THREE.HemisphereLight(0xcbdcff,0x27304d,2.1));
+const key=new THREE.DirectionalLight(0xffffff,3);key.position.set(3,5,4);scene.add(key);
+const fill=new THREE.DirectionalLight(0x4d83ff,1.7);fill.position.set(-4,2,-3);scene.add(fill);
+const floor=new THREE.Mesh(new THREE.CircleGeometry(1.25,64),new THREE.MeshStandardMaterial({color:0x234be5,metalness:.35,roughness:.45}));floor.rotation.x=-Math.PI/2;floor.position.y=-.015;scene.add(floor);
+const ring=new THREE.Mesh(new THREE.TorusGeometry(1.05,.018,8,80),new THREE.MeshBasicMaterial({color:0x93d8ff}));ring.rotation.x=Math.PI/2;ring.position.y=.008;scene.add(ring);
+const controls=new OrbitControls(camera,renderer.domElement);controls.enableDamping=true;controls.target.set(0,1,0);controls.minDistance=2;controls.maxDistance=8;controls.maxPolarAngle=Math.PI*.92;
+let model=null,spinning=false;
+const loader=new GLTFLoader(),draco=new DRACOLoader();draco.setDecoderPath('https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/libs/draco/');loader.setDRACOLoader(draco);loader.setMeshoptDecoder(MeshoptDecoder);
+loader.load('./god-of-war-spartan-archer.glb',g=>{
+ model=g.scene;model.updateMatrixWorld(true);const b=new THREE.Box3().setFromObject(model),size=b.getSize(new THREE.Vector3()),max=Math.max(size.x,size.y,size.z);if(max>0)model.scale.setScalar(2.45/max);model.updateMatrixWorld(true);const b2=new THREE.Box3().setFromObject(model),c=b2.getCenter(new THREE.Vector3());model.position.x-=c.x;model.position.y-=c.y;model.position.z-=c.z;model.updateMatrixWorld(true);scene.add(model);const b3=new THREE.Box3().setFromObject(model);model.position.y-=b3.min.y;controls.target.set(0,1.05,0);controls.update();status.textContent='¡Personaje cargado! Arrastra para girarlo.';
+},p=>{if(p.total)status.textContent='Cargando personaje… '+Math.round(p.loaded/p.total*100)+'%';},e=>{console.error(e);status.textContent='No se pudo cargar el modelo 3D. Revisa que el GLB siga en la raíz del repositorio.'});
+document.getElementById('spin').addEventListener('click',()=>{spinning=!spinning;document.getElementById('spin').textContent=spinning?'⏸ Detener giro':'⟳ Girar automáticamente';});
+function animate(){requestAnimationFrame(animate);if(spinning&&model)model.rotation.y+=.006;controls.update();renderer.render(scene,camera)}animate();
+new ResizeObserver(()=>{const w=box.clientWidth,h=box.clientHeight;camera.aspect=w/h;camera.updateProjectionMatrix();renderer.setSize(w,h)}).observe(box);
+</script>
+</body>
+</html>
