@@ -12,13 +12,13 @@
   "theme_color": "#1769e0",
   "icons": [
     {
-      "src": "/Nashe-Bloom/colibri-transparente-192.png",
+      "src": "/Nashe-Bloom/colibri-neon-transparente-512-1.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/Nashe-Bloom/colibri-transparente-512.png",
+      "src": "/Nashe-Bloom/colibri-neon-transparente-512-1.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
