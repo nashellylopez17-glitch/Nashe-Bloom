@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Nashe Bloom · Hábitos y equipo</title>
+<style>
+:root{color-scheme:dark;--blue:#164de0;--violet:#4b2bbd;--pale:#eef3ff;--muted:#667397}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:linear-gradient(145deg,#0b1748,#253da3 55%,#382080);color:#fff}
+header{padding:20px 18px 14px;display:flex;align-items:center;gap:12px}.logo{font-size:35px;color:#a7dcff}h1{font-size:23px;margin:0}.tag{font-size:10px;letter-spacing:3px;opacity:.82;margin-top:2px}
+main{padding:8px 14px 32px;max-width:760px;margin:auto}.hero{padding:20px;border:1px solid #8ba6ff55;border-radius:24px;background:linear-gradient(135deg,#2846a7,#39237e);margin-bottom:16px}
+.eyebrow{font-size:11px;letter-spacing:2px;font-weight:800;color:#c9eaff}h2{font-size:22px;line-height:1.2;margin:7px 0}p{line-height:1.5;margin:8px 0}
+.card{background:#f1f4ff;color:#172653;border-radius:25px;padding:17px;margin-bottom:15px}.muted{color:var(--muted)}.row{display:flex;align-items:center;gap:10px}.between{justify-content:space-between}.hidden{display:none!important}
+label.field{display:block;font-weight:750;margin:12px 0 6px}input[type=text],input[type=number],select{width:100%;padding:12px 13px;border:1px solid #c8d3f0;border-radius:13px;background:#fff;color:#172653;font-size:16px}
+button{border:1px solid #b5c7ff;background:#fff;color:#17367f;border-radius:22px;padding:11px 14px;font-size:13px;font-weight:750}button.primary{background:#244bd0;color:#fff;border-color:#244bd0}button.danger{border-color:#efb9c2;color:#a52d46}button.small{padding:7px 10px;font-size:12px}
+.level{font-weight:800;color:#1c48c2;font-size:15px}.xpbar{height:12px;background:#d9e1fa;border-radius:20px;overflow:hidden;margin:10px 0 5px}.xpfill{height:100%;width:0;background:linear-gradient(90deg,#164de0,#6b55ef);border-radius:20px}
+.sectiontitle{font-size:20px;margin:0 0 5px}.task{display:flex;gap:10px;align-items:center;padding:12px 0;border-bottom:1px solid #dce3f6}.task:last-child{border-bottom:0}
+.task input[type=checkbox]{width:22px;height:22px;accent-color:#254ce2;flex-shrink:0}.taskbody{flex:1;min-width:0}.taskname{font-weight:750;overflow-wrap:anywhere}.taskdesc{font-size:12px;color:#68769a}.points{color:#244bd0;font-weight:800;white-space:nowrap}
+.formgrid{display:grid;grid-template-columns:1fr 90px;gap:9px;align-items:end}.formgrid .full{grid-column:1/-1}.hint{font-size:12px;color:#68769a}.status{font-size:13px;color:#53658c;margin:8px 0}
+#viewer{height:min(48vh,390px);min-height:260px;background:#101943;border-radius:20px;overflow:hidden;position:relative;border:1px solid #d9e4ff}canvas{display:block;width:100%;height:100%}.pill{position:absolute;top:12px;left:12px;background:#0a163dcc;border:1px solid #ffffff33;border-radius:22px;padding:8px 11px;font-size:11px;color:white;z-index:2}
+.rewardgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:12px}.reward{border:1px solid #d6def4;border-radius:16px;padding:12px;background:#fff}.reward .emoji{font-size:26px}.reward strong{display:block;font-size:14px;margin:4px 0}.reward small{display:block;color:#6b789a;line-height:1.4}.reward.locked{background:#e7ebf7;color:#6f7894}.reward.unlocked{border-color:#6a8df0;background:#e8efff}.reward.equipped{box-shadow:0 0 0 2px #315de2 inset;background:#dfe9ff}
+#toast{font-size:13px;color:#2449bf;font-weight:700;min-height:20px;margin-top:8px}.note{font-size:12px;color:#657397;margin-top:12px}
+@media(min-width:620px){.rewardgrid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+</style>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
+</head>
+<body>
+<header><div class="logo">✦</div><div><h1>Nashe Bloom</h1><div class="tag">YOUR STORY AWAKENS</div></div></header>
+<main>
+<section class="hero"><div class="eyebrow">✦ TU PROGRESO, TU AVENTURA ✦</div><h2 id="heroTitle">Crea tu aventura</h2><p id="heroText">Crea tu perfil, añade hábitos a tu manera y desbloquea equipo para tu personaje.</p></section>
+<section class="card" id="profileCard">
+<h2>🪄 Crea tu perfil</h2><p class="muted">Prototipo local: el perfil y el progreso se guardan en este navegador, no en una cuenta online.</p>
+<label class="field" for="adventurerName">Nombre de aventurero</label><input id="adventurerName" type="text" maxlength="28" value="Aventurera">
+<label class="field" for="characterName">Nombre de tu personaje</label><input id="characterName" type="text" maxlength="28" value="Nashael">
+<label class="field">Clase inicial</label><div class="row" style="flex-wrap:wrap"><label><input type="radio" name="class" value="Arquera" checked> 🏹 Arquera</label><label><input type="radio" name="class" value="Guerrera"> ⚔️ Guerrera</label><label><input type="radio" name="class" value="Maga"> ✨ Maga</label></div>
+<button class="primary" id="createProfile" style="width:100%;margin-top:15px">Comenzar aventura ✨</button>
+</section>
+<section id="game" class="hidden">
+<section class="card">
+<div class="row between"><h2>🌿 Hola, <span id="greetName">Aventurera</span></h2><button class="small" id="editProfile">Editar perfil</button></div>
+<p class="muted">Tu personaje: <strong id="characterLabel">Nashael</strong> · <span id="classLabel">Arquera</span></p>
+<div class="row between"><h2>✨ Tu progreso</h2><span class="level" id="levelLabel">Nivel 1</span></div>
+<div class="row between"><span class="muted" id="xpLabel">0 XP total</span><span class="muted" id="nextLabel">50 XP para nivel 2</span></div><div class="xpbar"><div id="xpFill" class="xpfill"></div></div><p class="muted" id="progressText">Tu aventura acaba de comenzar.</p><p class="hint" id="xpGuide">Cada hábito completado suma sus XP. Nivel 2: 50 XP · Nivel 3: 120 XP · Nivel 4: 230 XP · Nivel 5: 350 XP · Nivel 6: 500 XP.</p>
+</section>
+<section class="card">
+<div class="row between"><h2 class="sectiontitle">🌱 Mis hábitos</h2><span class="level" id="habitCount">0 hábitos</span></div>
+<p class="muted">Añade, modifica o elimina tus propios hábitos. Cada hábito tiene su propia recompensa: si completas dos que dan 15 y 25 XP, ganas 40 XP en total. Cada uno cuenta una sola vez por día.</p>
+<form id="habitForm">
+<label class="field" for="habitName">Nombre del hábito</label><input id="habitName" type="text" maxlength="60" placeholder="Ej. Estirar 10 minutos" required>
+<div class="formgrid"><div><label class="field" for="habitXP">XP por completarlo</label><input id="habitXP" type="number" min="1" max="100" value="15" required></div><div><label class="field" for="habitFrequency">Frecuencia</label><select id="habitFrequency"><option value="Diario">Diario</option><option value="Días laborables">Días laborables</option><option value="Semanal">Semanal</option></select></div></div>
+<div class="row" style="margin-top:12px;flex-wrap:wrap"><button class="primary" id="saveHabit" type="submit">＋ Agregar hábito</button><button class="small hidden" id="cancelEdit" type="button">Cancelar edición</button></div>
+<input type="hidden" id="editingId" value="">
+</form>
+<p class="hint">Usa «Editar» para cambiar el nombre, los XP o la frecuencia. Los hábitos de ejemplo se pueden editar; los personalizados también se pueden eliminar. Para que el progreso sea justo, cambiar un hábito no vuelve a dar XP por una tarea ya completada hoy.</p>
+<div id="habitList"></div><div id="toast" aria-live="polite"></div>
+</section>
+<section class="card"><h2 class="sectiontitle">🏹 <span id="modelCharacterName">Nashael</span></h2><p class="muted">Modelo 3D base · arrastra para girar</p><div id="viewer"><div class="pill">VISOR 3D</div></div><div id="status" class="status">Preparando personaje…</div><button id="spin">⟳ Girar automáticamente</button></section>
+<section class="card">
+<h2 class="sectiontitle">🎁 Vestidor y equipo</h2><p class="muted">Completa hábitos para ganar XP. Las piezas se desbloquean por nivel y puedes equipar una recompensa disponible. En esta versión, equipar se guarda como selección; el cambio visual sobre el modelo 3D se conectará después.</p>
+<div id="rewards" class="rewardgrid"></div><p class="note">El cabello, la ropa, las botas y las armas necesitarán piezas 3D compatibles para aparecer realmente sobre el personaje. Esta versión prepara el catálogo, los desbloqueos y el equipo seleccionado.</p>
+</section>
+</section>
+</main><footer style="text-align:center;padding:0 12px 20px;color:#d7e4ff;font-size:12px">Nashe Bloom · Un paso real a la vez 💙</footer>
+<script>
+const PROFILE_KEY='nasheBloom_profile_demo_v2', STATE_KEY='nasheBloom_profile_progress_v2';
+const dayKey=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
+const freshState=()=>({date:dayKey(),xp:0,checks:{},habits:[],equipped:null});
+let profile=null,state=freshState();
+try{profile=JSON.parse(localStorage.getItem(PROFILE_KEY)||'null')}catch(e){}
+try{state=JSON.parse(localStorage.getItem(STATE_KEY)||'null')||freshState()}catch(e){state=freshState()}
+if(!state||typeof state!=='object')state=freshState();
+if(state.date!==dayKey()){state.date=dayKey();state.checks={};}
+if(!state.checks)state.checks={};if(!Array.isArray(state.habits))state.habits=[];if(typeof state.xp!=='number')state.xp=0;
+const defaults=[
+{id:'water',name:'Beber 2 litros de agua',xp:20,frequency:'Diario',created:true},
+{id:'read',name:'Leer 3 páginas',xp:15,frequency:'Diario',created:true},
+{id:'move',name:'Completar tu ejercicio',xp:25,frequency:'Diario',created:true}
+];
+if(!state.defaultOverrides)state.defaultOverrides={};
+const catalog=[
+{id:'hair',level:2,emoji:'💙',name:'Cabello azul eléctrico',type:'Cabello'},
+{id:'hairSilver',level:3,emoji:'🩶',name:'Cabello plateado',type:'Cabello'},
+{id:'armor',level:3,emoji:'🛡️',name:'Armadura azul y plateada',type:'Armadura'},
+{id:'boots',level:4,emoji:'🥾',name:'Botas de exploradora',type:'Botas'},
+{id:'aura',level:4,emoji:'✨',name:'Aura mágica azul',type:'Magia'},
+{id:'staff',level:5,emoji:'🪄',name:'Bastón arcano',type:'Arma'},
+{id:'bow',level:5,emoji:'🏹',name:'Arco de energía',type:'Arma'},
+{id:'crown',level:6,emoji:'👑',name:'Diadema de élite',type:'Accesorio'}
+];
+function allHabits(){return [...defaults.map(h=>({...h,...(state.defaultOverrides[h.id]||{})})),...state.habits]}
+function levelFor(x){if(x>=500)return 6;if(x>=350)return 5;if(x>=230)return 4;if(x>=120)return 3;if(x>=50)return 2;return 1}
+function floorXP(l){return ({1:0,2:50,3:120,4:230,5:350,6:500})[l]||500}
+function ceilXP(l){return ({1:50,2:120,3:230,4:350,5:500,6:650})[l]||650}
+function save(){localStorage.setItem(STATE_KEY,JSON.stringify(state))}
+function safe(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function render(){
+ if(!profile)return;
+ document.getElementById('profileCard').classList.add('hidden');document.getElementById('game').classList.remove('hidden');
+ document.getElementById('heroTitle').textContent='Tu aventura comienza, '+profile.character;
+ document.getElementById('heroText').textContent=profile.adventurer+' · '+profile.kind+' · Cada objetivo cumplido te acerca a nuevas recompensas.';
+ document.getElementById('greetName').textContent=profile.adventurer;document.getElementById('characterLabel').textContent=profile.character;document.getElementById('modelCharacterName').textContent=profile.character;document.getElementById('classLabel').textContent=profile.kind;
+ const lvl=levelFor(state.xp),lo=floorXP(lvl),hi=ceilXP(lvl);
+ document.getElementById('levelLabel').textContent='Nivel '+lvl;document.getElementById('xpLabel').textContent=state.xp+' XP total';document.getElementById('nextLabel').textContent=state.xp>=hi?'¡Nivel máximo de prueba!':(hi-state.xp)+' XP para nivel '+(lvl+1);document.getElementById('xpFill').style.width=Math.min(100,((state.xp-lo)/(hi-lo))*100)+'%';
+ document.getElementById('progressText').textContent=lvl===1?'Tu aventura acaba de comenzar.':lvl<3?'¡Vas creciendo! Sigue acumulando XP.':'¡Tu constancia está haciendo evolucionar a '+profile.character+'!';
+ renderHabits();renderRewards();
+}
+function renderHabits(){
+ const list=document.getElementById('habitList');list.innerHTML='';
+ const habits=allHabits();document.getElementById('habitCount').textContent=habits.length+' hábitos';
+ habits.forEach(h=>{
+  const checked=!!state.checks[h.id],row=document.createElement('div');row.className='task';
+  const cb=document.createElement('input');cb.type='checkbox';cb.checked=checked;cb.disabled=checked;cb.setAttribute('aria-label','Completar '+h.name);
+  cb.addEventListener('change',()=>{if(!state.checks[h.id]){state.checks[h.id]=true;state.xp+=h.xp;save();render();document.getElementById('toast').textContent='¡+'+h.xp+' XP! Hábito completado. 💙';}});
+  const body=document.createElement('div');body.className='taskbody';
+  body.innerHTML='<div class="taskname">'+safe(h.name)+'</div><div class="taskdesc">'+safe(h.frequency)+' · '+(checked?'Completado hoy':'Objetivo diario')+'</div>';
+  const points=document.createElement('span');points.className='points';points.textContent='+'+h.xp+' XP';
+  row.append(cb,body,points);
+  {const actions=document.createElement('div');actions.className='row';actions.style.gap='5px';const edit=document.createElement('button');edit.className='small';edit.textContent='Editar';edit.onclick=()=>startEdit(h);actions.append(edit);if(!h.created){const del=document.createElement('button');del.className='small danger';del.textContent='Eliminar';del.onclick=()=>deleteHabit(h);actions.append(del);}row.append(actions);}
+  list.append(row);
+ });
+}
+function renderRewards(){
+ const area=document.getElementById('rewards');area.innerHTML='';const lvl=levelFor(state.xp);
+ catalog.forEach(r=>{
+  const unlocked=lvl>=r.level, equipped=state.equipped===r.id;
+  const div=document.createElement('div');div.className='reward '+(unlocked?'unlocked':'locked')+(equipped?' equipped':'');
+  div.innerHTML='<div class="emoji">'+(unlocked?r.emoji:'🔒')+'</div><strong>'+safe(r.name)+'</strong><small>'+safe(r.type)+' · '+(unlocked?'Desbloqueado en nivel '+r.level:'Se abre en nivel '+r.level)+'</small>';
+  const b=document.createElement('button');b.className='small';b.textContent=unlocked?(equipped?'Equipado ✓':'Equipar'):'Bloqueado';b.disabled=!unlocked;
+  b.onclick=()=>{state.equipped=r.id;save();renderRewards();document.getElementById('toast').textContent='¡'+r.name+' equipado en tu vestidor! La apariencia 3D real se conectará en la siguiente fase.'};
+  div.append(b);area.append(div);
+ });
+}
+function startEdit(h){
+ document.getElementById('habitName').value=h.name;document.getElementById('habitXP').value=h.xp;document.getElementById('habitFrequency').value=h.frequency;document.getElementById('editingId').value=h.id;document.getElementById('saveHabit').textContent='Guardar cambios';document.getElementById('cancelEdit').classList.remove('hidden');document.getElementById('habitName').focus();
+}
+function resetHabitForm(){document.getElementById('habitForm').reset();document.getElementById('habitXP').value=15;document.getElementById('editingId').value='';document.getElementById('saveHabit').textContent='＋ Agregar hábito';document.getElementById('cancelEdit').classList.add('hidden')}
+function deleteHabit(h){if(!confirm('¿Eliminar el hábito "'+h.name+'"? El XP ya ganado no se quitará.'))return;state.habits=state.habits.filter(x=>x.id!==h.id);delete state.checks[h.id];save();render();document.getElementById('toast').textContent='Hábito eliminado.'}
+document.getElementById('habitForm').addEventListener('submit',e=>{
+ e.preventDefault();const name=document.getElementById('habitName').value.trim(),xp=Math.max(1,Math.min(100,Number(document.getElementById('habitXP').value)||15)),frequency=document.getElementById('habitFrequency').value,editing=document.getElementById('editingId').value;
+ if(!name)return;
+ if(editing){const h=state.habits.find(x=>x.id===editing);if(h){h.name=name;h.xp=xp;h.frequency=frequency;}else{const base=defaults.find(x=>x.id===editing);if(base)state.defaultOverrides[editing]={name,xp,frequency};}document.getElementById('toast').textContent='Cambios guardados. 💙'}
+ else{state.habits.push({id:'custom-'+Date.now(),name,xp,frequency,created:false});document.getElementById('toast').textContent='¡Hábito agregado! 🌱'}
+ save();resetHabitForm();render();
+});
+document.getElementById('cancelEdit').addEventListener('click',resetHabitForm);
+document.getElementById('createProfile').addEventListener('click',()=>{
+ profile={adventurer:document.getElementById('adventurerName').value.trim()||'Aventurera',character:document.getElementById('characterName').value.trim()||'Mi personaje',kind:document.querySelector('input[name="class"]:checked').value};
+ localStorage.setItem(PROFILE_KEY,JSON.stringify(profile));render();
+});
+document.getElementById('editProfile').addEventListener('click',()=>{
+ document.getElementById('adventurerName').value=profile.adventurer;document.getElementById('characterName').value=profile.character;document.querySelectorAll('input[name="class"]').forEach(el=>el.checked=el.value===profile.kind);document.getElementById('game').classList.add('hidden');document.getElementById('profileCard').classList.remove('hidden');
+});
+if(profile){document.getElementById('adventurerName').value=profile.adventurer;document.getElementById('characterName').value=profile.character;document.querySelectorAll('input[name="class"]').forEach(el=>el.checked=el.value===profile.kind);render()}
+</script>
+<script type="module">
+import * as THREE from 'three';import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';import {OrbitControls} from 'three/addons/controls/OrbitControls.js';import {DRACOLoader} from 'three/addons/loaders/DRACOLoader.js';import {MeshoptDecoder} from 'three/addons/libs/meshopt_decoder.module.js';
+const box=document.getElementById('viewer'),status=document.getElementById('status');const scene=new THREE.Scene();scene.background=new THREE.Color(0x101943);
+const camera=new THREE.PerspectiveCamera(35,box.clientWidth/box.clientHeight,.1,1000);camera.position.set(0,1.55,4.7);
+const renderer=new THREE.WebGLRenderer({antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio||1,2));renderer.setSize(box.clientWidth,box.clientHeight);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.15;box.appendChild(renderer.domElement);
+scene.add(new THREE.HemisphereLight(0xcbdcff,0x27304d,2.1));const key=new THREE.DirectionalLight(0xffffff,3);key.position.set(3,5,4);scene.add(key);const fill=new THREE.DirectionalLight(0x4d83ff,1.7);fill.position.set(-4,2,-3);scene.add(fill);
+const floor=new THREE.Mesh(new THREE.CircleGeometry(1.25,64),new THREE.MeshStandardMaterial({color:0x234be5,metalness:.35,roughness:.45}));floor.rotation.x=-Math.PI/2;floor.position.y=-.015;scene.add(floor);const ring=new THREE.Mesh(new THREE.TorusGeometry(1.05,.018,8,80),new THREE.MeshBasicMaterial({color:0x93d8ff}));ring.rotation.x=Math.PI/2;ring.position.y=.008;scene.add(ring);
+const controls=new OrbitControls(camera,renderer.domElement);controls.enableDamping=true;controls.target.set(0,1,0);controls.minDistance=2;controls.maxDistance=8;controls.maxPolarAngle=Math.PI*.92;
+let model=null,spinning=false;const loader=new GLTFLoader(),draco=new DRACOLoader();draco.setDecoderPath('https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/libs/draco/');loader.setDRACOLoader(draco);loader.setMeshoptDecoder(MeshoptDecoder);
+loader.load('./god-of-war-spartan-archer.glb',g=>{model=g.scene;model.updateMatrixWorld(true);const b=new THREE.Box3().setFromObject(model),size=b.getSize(new THREE.Vector3()),max=Math.max(size.x,size.y,size.z);if(max>0)model.scale.setScalar(2.45/max);model.updateMatrixWorld(true);const b2=new THREE.Box3().setFromObject(model),c=b2.getCenter(new THREE.Vector3());model.position.x-=c.x;model.position.y-=c.y;model.position.z-=c.z;model.updateMatrixWorld(true);scene.add(model);const b3=new THREE.Box3().setFromObject(model);model.position.y-=b3.min.y;controls.target.set(0,1.05,0);controls.update();status.textContent='¡Personaje cargado! Arrastra para girarlo.';},p=>{if(p.total)status.textContent='Cargando personaje… '+Math.round(p.loaded/p.total*100)+'%';},e=>{console.error(e);status.textContent='No se pudo cargar el modelo 3D. Revisa que el GLB siga en la raíz del repositorio.'});
+document.getElementById('spin').addEventListener('click',()=>{spinning=!spinning;document.getElementById('spin').textContent=spinning?'⏸ Detener giro':'⟳ Girar automáticamente'});function animate(){requestAnimationFrame(animate);if(spinning&&model)model.rotation.y+=.006;controls.update();renderer.render(scene,camera)}animate();new ResizeObserver(()=>{const w=box.clientWidth,h=box.clientHeight;camera.aspect=w/h;camera.updateProjectionMatrix();renderer.setSize(w,h)}).observe(box);
+</script>
+</body></html>
