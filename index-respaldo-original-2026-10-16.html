@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#1769e0">
+<link rel="manifest" href="/Nashe-Bloom/manifest.webmanifest">
+<title>Nashe Bloom</title>
+<style>
+:root{--blue:#1769e0;--navy:#183153;--pale:#f2f6ff;--red:#e34b55;--yellow:#e8a52b;--green:#198754}
+*{box-sizing:border-box}
+body{margin:0;background:var(--pale);font-family:Arial,sans-serif;color:var(--navy);padding-bottom:82px}
+header{background:var(--blue);color:white;padding:24px 20px 28px;border-radius:0 0 28px 28px}
+.brand{display:flex;align-items:center;gap:13px}.brand img{width:68px;height:68px;object-fit:contain}.brand h1{font-size:28px;margin:0}.tagline{margin:10px 0 0;color:#e7efff}
+main{max-width:700px;margin:auto;padding:22px 16px}
+h2{font-size:23px;margin:8px 0 18px}
+.menu{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.card{background:white;border:1px solid #e0e8f7;border-radius:22px;padding:18px 16px;min-height:126px;text-align:left;color:var(--navy);box-shadow:0 5px 16px #163b6610;cursor:pointer;font:inherit}
+.card-image{display:block;width:100%;height:150px;object-fit:cover;border-radius:16px;margin-bottom:12px}
+.card strong{font-size:18px}
+.panel{background:white;border-radius:24px;padding:20px;margin-top:18px;box-shadow:0 5px 18px #163b660a}
+.hidden{display:none!important}.back{border:0;background:#e8f0ff;color:var(--blue);font-weight:bold;border-radius:12px;padding:10px 13px;margin-bottom:15px;font-size:15px}
+.subtle{color:#64748b;font-size:14px;line-height:1.45}
+form.add-form{display:flex;gap:8px;margin:15px 0;flex-wrap:wrap}
+input[type=text],textarea{width:100%;padding:13px;border:1px solid #cbd7ea;border-radius:13px;font:inherit;color:var(--navy);background:white}
+form.add-form input{flex:1;min-width:150px}
+button.primary{background:var(--blue);color:white;border:0;border-radius:13px;padding:12px 17px;font:inherit;cursor:pointer}
+button.secondary{background:#edf2fb;color:var(--navy);border:0;border-radius:10px;padding:8px 11px;font:inherit;cursor:pointer}
+.item-list{list-style:none;padding:0;margin:12px 0}.item{display:flex;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid #edf1f7;min-width:0}.item label{flex:1;overflow-wrap:anywhere}.item.done label{text-decoration:line-through;color:#718096}
+.week-habit{padding:16px 0;border-bottom:1px solid #edf1f7}.habit-head{display:flex;justify-content:space-between;gap:10px;align-items:center}.habit-name{font-weight:bold;overflow-wrap:anywhere}.count{font-size:13px;color:#64748b;white-space:nowrap}
+.bar{height:11px;background:#e9edf5;border-radius:99px;overflow:hidden;margin:10px 0}.fill{height:100%;border-radius:99px;transition:width .2s}.days{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}.day{border:1px solid #d9e2f2;border-radius:10px;background:#f8faff;padding:8px 0;text-align:center;font-size:12px;color:var(--navy);cursor:pointer}.day.active{background:var(--blue);border-color:var(--blue);color:white}.day small{display:block;font-size:10px;margin-top:3px}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:white;border-top:1px solid #e2e8f0;display:flex;justify-content:space-around;padding:8px 4px max(8px,env(safe-area-inset-bottom));z-index:5}
+.bottom-nav button{border:0;background:transparent;color:#64748b;font:inherit;font-size:11px;display:flex;flex-direction:column;align-items:center;gap:4px;padding:5px 7px;cursor:pointer}.bottom-nav .nav-icon{font-size:20px}.bottom-nav button.active{color:var(--blue);font-weight:bold}
+.stat{background:#edf4ff;border-radius:15px;padding:14px;margin:10px 0}.stat strong{font-size:24px;color:var(--blue)}
+footer{text-align:center;color:#64748b;font-size:12px;padding:20px}
+@media(min-width:560px){main{padding-top:28px}.menu{grid-template-columns:repeat(3,minmax(0,1fr))}.card{min-height:140px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand"><img src="colibri-neon-transparente-512-1.png" alt="Colibrí azul" onerror="this.onerror=null;this.src='colibri-512.png'"><h1>Nashe Bloom</h1></div>
+  <p class="tagline">Pequeños pasos, grandes cambios 💙</p>
+</header>
+<main>
+  <section id="home">
+    <h2>¿Qué vamos a hacer hoy?</h2>
+    <div class="menu">
+      <button class="card" data-open="Ejercicios"><img class="card-image" src="ejercicios.png" alt="Ejercicios"><strong>Ejercicios</strong></button>
+      <button class="card" data-open="Hábitos diarios"><img class="card-image" src="habitos-diarios.png" alt="Hábitos diarios"><strong>Hábitos diarios</strong></button>
+      <button class="card" data-open="Pendientes"><img class="card-image" src="pendientes.png" alt="Pendientes"><strong>Pendientes</strong></button>
+      <button class="card" data-open="Progreso"><img class="card-image" src="progreso.png" alt="Progreso"><strong>Progreso</strong></button>
+      <button class="card" data-open="Notas personales"><img class="card-image" src="notas-personales.png" alt="Notas personales"><strong>Notas personales</strong></button>
+    </div>
+    <p class="subtle" style="text-align:center;margin-top:20px">Tus pequeños avances también cuentan 💙</p>
+  </section>
+  <section id="section" class="panel hidden"></section>
+</main>
+<nav class="bottom-nav" aria-label="Navegación principal">
+  <button class="active" data-nav="Inicio"><span class="nav-icon">⌂</span>Inicio</button>
+  <button data-nav="Ejercicios"><span class="nav-icon">🏋️</span>Ejercicios</button>
+  <button data-nav="Hábitos diarios"><span class="nav-icon">🌱</span>Hábitos</button>
+  <button data-nav="Pendientes"><span class="nav-icon">✅</span>Pendientes</button>
+  <button data-nav="Progreso"><span class="nav-icon">📈</span>Progreso</button>
+</nav>
+<script>
+const STORE='nasheBloom_v3';
+const DAYS=['L','M','X','J','V','S','D'];
+const today=new Date();
+function mondayOf(date){const d=new Date(date);d.setHours(12,0,0,0);const day=(d.getDay()+6)%7;d.setDate(d.getDate()-day);return d}
+function weekKey(date){return mondayOf(date).toISOString().slice(0,10)}
+function fresh(){return {exercises:[],habits:[],tasks:[],notes:[],history:{},week:weekKey(today)}}
+let state;
+try{state=JSON.parse(localStorage.getItem(STORE))||fresh()}catch(e){state=fresh()}
+state.exercises=Array.isArray(state.exercises)?state.exercises:[];
+state.habits=Array.isArray(state.habits)?state.habits:[];
+state.tasks=Array.isArray(state.tasks)?state.tasks:[];
+state.notes=Array.isArray(state.notes)?state.notes:[];
+state.history=state.history||{};
+function save(){localStorage.setItem(STORE,JSON.stringify(state))}
+function archiveCurrentWeek(){const key=state.week||weekKey(today);if(!state.history[key])state.history[key]={habits:JSON.parse(JSON.stringify(state.habits))};}
+function rollWeek(){const current=weekKey(today);if(state.week!==current){archiveCurrentWeek();state.week=current;state.habits=state.habits.map(h=>({...h,days:[false,false,false,false,false,false,false]}));save()}}
+rollWeek();
+const home=document.getElementById('home'),panel=document.getElementById('section');
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function openSection(name){home.classList.add('hidden');panel.classList.remove('hidden');document.querySelectorAll('.bottom-nav button').forEach(b=>b.classList.toggle('active',b.dataset.nav===name));render(name);window.scrollTo(0,0)}
+function goHome(){panel.classList.add('hidden');home.classList.remove('hidden');document.querySelectorAll('.bottom-nav button').forEach(b=>b.classList.toggle('active',b.dataset.nav==='Inicio'));window.scrollTo(0,0)}
+function addForm(placeholder,action){return `<form class="add-form" data-add="${action}"><input type="text" name="value" placeholder="${placeholder}" maxlength="180" required><button class="primary" type="submit">Agregar</button></form>`}
+function render(name){
+ let out=`<button class="back" data-home>← Volver al menú</button><h2>${esc(name)}</h2>`;
+ if(name==='Hábitos diarios'){
+  out+=`<p class="subtle">Marca cada día que completes el hábito. La semana empieza cada lunes y tus semanas anteriores se conservan en el historial de esta app.</p>${addForm('Escribe un hábito…','habit')}`;
+  if(!state.habits.length)out+='<p class="subtle">Todavía no tienes hábitos. Agrega uno para comenzar 🌱</p>';
+  state.habits.forEach((h,i)=>{const n=(h.days||[]).filter(Boolean).length;const color=n===7?'#1769e0':n>=1?'#e8a52b':'#e34b55';out+=`<div class="week-habit"><div class="habit-head"><span class="habit-name">${esc(h.name)}</span><span class="count">${n}/7 días</span></div><div class="bar"><div class="fill" style="width:${n/7*100}%;background:${color}"></div></div><div class="days">${DAYS.map((d,j)=>`<button class="day ${h.days&&h.days[j]?'active':''}" data-day="${i},${j}" aria-label="${d} ${h.days&&h.days[j]?'completado':'pendiente'}">${d}<small>${h.days&&h.days[j]?'✓':'·'}</small></button>`).join('')}</div><div style="text-align:right;margin-top:9px"><button class="secondary" data-delete="habit,${i}">Eliminar hábito</button></div></div>`});
+  out+='<h3>Semanas anteriores</h3>';
+  const keys=Object.keys(state.history).sort().reverse();
+  out+=keys.length?keys.map(k=>`<div class="stat"><strong>${esc(k)}</strong><p class="subtle">${(state.history[k].habits||[]).reduce((a,h)=>a+(h.days||[]).filter(Boolean).length,0)} días de hábitos completados</p></div>`).join(''):'<p class="subtle">Aquí aparecerán tus resultados cuando comience una nueva semana.</p>';
+ } else if(name==='Progreso'){
+  const total=state.habits.length*7;const done=state.habits.reduce((a,h)=>a+(h.days||[]).filter(Boolean).length,0);out+=`<div class="stat"><p>Avance semanal de hábitos</p><strong>${total?Math.round(done/total*100):0}%</strong><div class="bar"><div class="fill" style="width:${total?done/total*100:0}%;background:#1769e0"></div></div><p class="subtle">${done} de ${total} registros completados esta semana.</p></div><h3>Hábitos por completar</h3>${state.habits.length?state.habits.map(h=>`<p>${esc(h.name)} — ${(h.days||[]).filter(Boolean).length}/7 días</p>`).join(''):'<p class="subtle">Agrega hábitos en Hábitos diarios para ver tu progreso.</p>'}<h3>Historial semanal</h3>${Object.keys(state.history).sort().reverse().map(k=>`<div class="stat"><strong>${esc(k)}</strong><p class="subtle">${(state.history[k].habits||[]).reduce((a,h)=>a+(h.days||[]).filter(Boolean).length,0)} días completados</p></div>`).join('')||'<p class="subtle">Tu historial aparecerá aquí.</p>'}`;
+ } else {
+  const key=name==='Ejercicios'?'exercises':name==='Pendientes'?'tasks':'notes';
+  const placeholder=name==='Notas personales'?'Escribe una nota…':name==='Ejercicios'?'Escribe un ejercicio…':'Escribe un pendiente…';
+  out+=addForm(placeholder,key);
+  if(!state[key].length)out+=`<p class="subtle">Todavía no hay elementos aquí. Puedes agregar el primero ✨</p>`;
+  out+='<ul class="item-list">'+state[key].map((item,i)=>{const obj=typeof item==='string'?{text:item,done:false}:item;return `<li class="item ${obj.done?'done':''}">${name==='Notas personales'?'📝':`<input type="checkbox" data-check="${key},${i}" ${obj.done?'checked':''} aria-label="Marcar completado">`}<label>${esc(obj.text)}</label><button class="secondary" data-delete="${key},${i}">Eliminar</button></li>`}).join('')+'</ul>';
+ }
+ panel.innerHTML=out;
+}
+document.addEventListener('click',e=>{
+ const opener=e.target.closest('[data-open]');if(opener){openSection(opener.dataset.open);return}
+ const nav=e.target.closest('[data-nav]');if(nav){if(nav.dataset.nav==='Inicio')goHome();else openSection(nav.dataset.nav);return}
+ if(e.target.closest('[data-home]')){goHome();return}
+ const day=e.target.closest('[data-day]');if(day){const [i,j]=day.dataset.day.split(',').map(Number);state.habits[i].days=state.habits[i].days||[false,false,false,false,false,false,false];state.habits[i].days[j]=!state.habits[i].days[j];save();render('Hábitos diarios');return}
+ const del=e.target.closest('[data-delete]');if(del){const [key,i]=del.dataset.delete.split(',');const arr=key==='habit'?state.habits:state[key];if(arr){arr.splice(Number(i),1);save();const title=key==='habit'?'Hábitos diarios':key==='exercises'?'Ejercicios':key==='tasks'?'Pendientes':'Notas personales';render(title)}return}
+ const check=e.target.closest('[data-check]');if(check){const [key,i]=check.dataset.check.split(',');const item=state[key][Number(i)];if(typeof item==='string')state[key][Number(i)]={text:item,done:check.checked};else item.done=check.checked;save();const title=key==='exercises'?'Ejercicios':'Pendientes';render(title)}
+});
+document.addEventListener('submit',e=>{const form=e.target.closest('[data-add]');if(!form)return;e.preventDefault();const value=form.elements.value.value.trim();if(!value)return;const key=form.dataset.add;if(key==='habit')state.habits.push({name:value,days:[false,false,false,false,false,false,false]});else if(key==='notes')state.notes.push({text:value,done:false});else state[key].push({text:value,done:false});save();const title=key==='habit'?'Hábitos diarios':key==='exercises'?'Ejercicios':key==='tasks'?'Pendientes':'Notas personales';render(title)});
+save();
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/Nashe-Bloom/service-worker.js');
+  });
+}
+</script>
+</body>
+</html>
