@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Nashe Bloom · Prueba armadura azul</title>
+<style>
+:root{color-scheme:dark;--blue:#164de0;--violet:#4b2bbd;--ink:#0c153f;--pale:#eef3ff}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:linear-gradient(145deg,#0b1748,#253da3 55%,#382080);color:#fff}
+header{padding:22px 20px 14px;display:flex;align-items:center;gap:12px}
+.logo{font-size:34px;color:#fff}
+h1{font-size:24px;margin:0}
+.tag{font-size:11px;letter-spacing:3px;opacity:.8;margin-top:2px}
+main{padding:8px 16px 28px;max-width:720px;margin:auto}
+.hero{padding:22px;border:1px solid #8ba6ff55;border-radius:25px;background:linear-gradient(135deg,#2846a7,#39237e);margin-bottom:18px}
+.eyebrow{font-size:12px;letter-spacing:2px;font-weight:800;color:#c9eaff}
+h2{font-size:27px;line-height:1.15;margin:10px 0}
+p{line-height:1.55}
+.card{background:#f1f4ff;color:#172653;border-radius:28px;padding:18px;margin-bottom:18px}
+.sub{color:#667397;margin-top:-6px}
+#viewer{height:min(64vh,580px);min-height:360px;background:#101943;border-radius:24px;overflow:hidden;position:relative;border:1px solid #d9e4ff}
+canvas{display:block;width:100%;height:100%}
+.pill{position:absolute;top:14px;left:14px;background:#0a163dcc;border:1px solid #ffffff33;border-radius:22px;padding:9px 13px;font-size:12px;color:white;z-index:2}
+.hint{font-size:13px;color:#5e6c91;text-align:center;margin:12px 0 0}
+.status{font-size:14px;color:#d6e5ff;margin:10px 0}
+.controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+button{border:1px solid #b5c7ff;background:#fff;color:#17367f;border-radius:24px;padding:11px 15px;font-size:14px;font-weight:650}
+.note{font-size:13px;color:#667397;margin-top:12px}.color-controls{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}.color-controls button{display:flex;align-items:center;gap:7px;padding:10px 12px}.swatch{width:14px;height:14px;border-radius:50%;display:inline-block;border:1px solid #9aa8cc;flex-shrink:0}.color-controls button.selected{outline:3px solid #7295ff;outline-offset:2px}.gear-panel{margin-top:18px;padding:16px;border-radius:18px;background:#e3eaff;border:1px solid #c0d0ff}.gear-panel h3{margin:0 0 8px;color:#172653;font-size:20px}.gear-panel p{color:#4e5e86;font-size:14px;margin:7px 0}.gear-row{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.gear-row button{min-height:44px}.gear-state{font-size:13px;font-weight:700;color:#24448d;margin-top:8px}
+</style>
+<script type="importmap">
+{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}
+</script>
+</head>
+<body>
+<header><div class="logo">✦</div><div><h1>Nashe Bloom</h1><div class="tag">YOUR STORY AWAKENS</div></div></header>
+<main>
+<section class="hero">
+<div class="eyebrow">✦ TU AVENTURA COMIENZA ✦</div>
+<h2>Nashael · vestidor de equipo</h2>
+<p>Prueba experimental: cabello recoloreado a azul en la textura del modelo. Esta página es independiente y no modifica tu aplicación principal.</p>
+</section>
+<section class="card">
+<h2>🏹 Mi personaje</h2>
+<p class="sub">Modelo 3D · archivo GLB</p>
+<div class="color-controls" aria-label="Colores del cabello"><button type="button" data-hair="blue"><span class="swatch" style="background:#168cff"></span>Azul eléctrico</button><button type="button" data-hair="silver"><span class="swatch" style="background:#c8d0df"></span>Plateado</button><button type="button" data-hair="black"><span class="swatch" style="background:#29283a"></span>Negro</button><button type="button" data-hair="violet"><span class="swatch" style="background:#8b4de8"></span>Violeta</button></div><div class="gear-panel"><h3>🛡️ Vestidor de equipo</h3><p>Esta prueba cambia los colores de algunas zonas de la textura original para explorar una apariencia azul. No separa ni añade piezas 3D; eso será una etapa posterior.</p><div class="gear-row"><button type="button" id="toggleWeapon">Guardar arco</button></div><div class="gear-state" id="gearStatus">Arco actual: equipado</div><p><strong>Importante:</strong> si alguna zona queda mal coloreada, lo corregiremos. Esta es una prueba visual de textura, no un sistema de equipamiento.</p></div><div id="viewer"><div class="pill">VISOR 3D · ARRASTRA PARA GIRAR</div></div>
+<div id="status" class="status">Cargando la arquera…</div>
+<div class="controls"><button id="spin">⟳ Girar automáticamente</button><button id="reset">↺ Centrar personaje</button></div>
+<div class="hint">Arrastra para girar · Pellizca para acercar</div>
+<p class="note" id="hairStatus">Preparando el selector de cabello… Si el color no cambia o afecta otras piezas, lo corregiremos antes de integrarlo.</p>
+</section>
+</main>
+<script type="module">
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
+import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
+
+const box=document.getElementById('viewer');
+const status=document.getElementById('status');
+const scene=new THREE.Scene();
+scene.background=new THREE.Color(0x101943);
+const camera=new THREE.PerspectiveCamera(35,box.clientWidth/box.clientHeight,0.1,1000);
+camera.position.set(0,1.5,4.8);
+const renderer=new THREE.WebGLRenderer({antialias:true,alpha:false});
+renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
+renderer.setSize(box.clientWidth,box.clientHeight);
+renderer.outputColorSpace=THREE.SRGBColorSpace;
+renderer.toneMapping=THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure=1.15;
+box.appendChild(renderer.domElement);
+scene.add(new THREE.HemisphereLight(0xcbdcff,0x27304d,2.1));
+const key=new THREE.DirectionalLight(0xffffff,3.0);key.position.set(3,5,4);scene.add(key);
+const fill=new THREE.DirectionalLight(0x4d83ff,1.7);fill.position.set(-4,2,-3);scene.add(fill);
+const floor=new THREE.Mesh(new THREE.CircleGeometry(1.25,64),new THREE.MeshStandardMaterial({color:0x234be5,metalness:.35,roughness:.45}));
+floor.rotation.x=-Math.PI/2;floor.position.y=-0.015;scene.add(floor);
+const ring=new THREE.Mesh(new THREE.TorusGeometry(1.05,.018,8,80),new THREE.MeshBasicMaterial({color:0x93d8ff}));
+ring.rotation.x=Math.PI/2;ring.position.y=.008;scene.add(ring);
+const controls=new OrbitControls(camera,renderer.domElement);
+controls.enableDamping=true;controls.target.set(0,1,0);controls.minDistance=2;controls.maxDistance=8;controls.maxPolarAngle=Math.PI*.92;
+let model=null, spinning=false;
+const loader = new GLTFLoader();
+const dracoLoader = new DRACOLoader();
+dracoLoader.setDecoderPath('https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/libs/draco/');
+loader.setDRACOLoader(dracoLoader);
+loader.setMeshoptDecoder(MeshoptDecoder);
+status.textContent='Buscando el modelo y preparando sus componentes…';
+loader.load('./nashael-arquera-cabello-azul.glb',g=>{
+ model=g.scene;
+ // Primero escalar y después centrar: evita que la traslación original
+ // deje el personaje fuera del encuadre en modelos con origen desplazado.
+ model.updateMatrixWorld(true);
+ const originalBox=new THREE.Box3().setFromObject(model);
+ const originalSize=originalBox.getSize(new THREE.Vector3());
+ const max=Math.max(originalSize.x,originalSize.y,originalSize.z);
+ if(max>0) model.scale.setScalar(2.45/max);
+ model.updateMatrixWorld(true);
+ const scaledBox=new THREE.Box3().setFromObject(model);
+ const scaledCenter=scaledBox.getCenter(new THREE.Vector3());
+ model.position.x-=scaledCenter.x;
+ model.position.y-=scaledCenter.y;
+ model.position.z-=scaledCenter.z;
+ model.updateMatrixWorld(true);
+ scene.add(model);
+ const weaponMesh = model.getObjectByName('weapon');
+ const toggleWeaponButton = document.getElementById('toggleWeapon');
+ const gearStatus = document.getElementById('gearStatus');
+ if (weaponMesh) {
+   toggleWeaponButton.addEventListener('click', () => {
+     weaponMesh.visible = !weaponMesh.visible;
+     toggleWeaponButton.textContent = weaponMesh.visible ? 'Guardar arco' : 'Equipar arco actual';
+     gearStatus.textContent = weaponMesh.visible ? 'Arco actual: equipado' : 'Arco actual: guardado';
+   });
+ } else {
+   toggleWeaponButton.disabled = true;
+   gearStatus.textContent = 'No se encontró una pieza de arma separada por nombre; revisaremos la estructura.';
+ }
+
+ // Prepara una copia editable de la textura que ya trae el modelo.
+ // Esta versión busca tonos azules en la textura de prueba y los cambia.
+ let editableHairTexture = null;
+ let editableHairCanvas = null;
+ let editableHairCtx = null;
+ let originalPixels = null;
+ model.traverse(obj => {
+   if (!obj.isMesh) return;
+   const mats = Array.isArray(obj.material) ? obj.material : [obj.material];
+   for (const mat of mats) {
+     if (!mat || !mat.map || editableHairTexture) continue;
+     try {
+       const image = mat.map.image;
+       const w = image.width || image.videoWidth;
+       const h = image.height || image.videoHeight;
+       if (!w || !h) continue;
+       editableHairCanvas = document.createElement('canvas');
+       editableHairCanvas.width = w;
+       editableHairCanvas.height = h;
+       editableHairCtx = editableHairCanvas.getContext('2d', {willReadFrequently:true});
+       editableHairCtx.drawImage(image, 0, 0, w, h);
+       originalPixels = editableHairCtx.getImageData(0, 0, w, h).data.slice();
+       editableHairTexture = new THREE.CanvasTexture(editableHairCanvas);
+       editableHairTexture.colorSpace = mat.map.colorSpace;
+       editableHairTexture.flipY = mat.map.flipY;
+       editableHairTexture.wrapS = mat.map.wrapS;
+       editableHairTexture.wrapT = mat.map.wrapT;
+       editableHairTexture.channel = mat.map.channel;
+       mat.map = editableHairTexture;
+       mat.needsUpdate = true;
+     } catch (err) {
+       console.warn('No se pudo preparar la textura editable:', err);
+     }
+   }
+ });
+
+ const hairNames = {blue:'azul eléctrico', silver:'plateado', black:'negro', violet:'violeta'};
+ const hairColors = {
+   blue:[25,135,255],
+   silver:[190,202,222],
+   black:[35,33,48],
+   violet:[142,68,225]
+ };
+ function setHairColor(kind) {
+   const label = document.getElementById('hairStatus');
+   if (!editableHairCanvas || !editableHairCtx || !originalPixels || !editableHairTexture) {
+     label.textContent = 'No se pudo preparar la textura en este navegador. Nashael sigue intacta; probaremos otra técnica.';
+     return;
+   }
+   const w = editableHairCanvas.width, h = editableHairCanvas.height;
+   const frame = editableHairCtx.createImageData(w, h);
+   frame.data.set(originalPixels);
+   const target = hairColors[kind] || hairColors.blue;
+   let changed = 0;
+   for (let i = 0; i < frame.data.length; i += 4) {
+     const r = originalPixels[i], g = originalPixels[i+1], b = originalPixels[i+2], a = originalPixels[i+3];
+     // El GLB de prueba ya tiene el cabello azul; recolorea píxeles claramente azules.
+     if (a > 10 && b > 90 && b > r * 1.12 && g > r * 0.95 && (b-r) > 25) {
+       const lum = Math.max(0.42, Math.min(1.18, (r+g+b)/(3*145)));
+       frame.data[i] = Math.min(255, target[0] * lum);
+       frame.data[i+1] = Math.min(255, target[1] * lum);
+       frame.data[i+2] = Math.min(255, target[2] * lum);
+       changed++;
+     }
+   }
+   editableHairCtx.putImageData(frame, 0, 0);
+   editableHairTexture.needsUpdate = true;
+   document.querySelectorAll('[data-hair]').forEach(btn => btn.classList.toggle('selected', btn.dataset.hair === kind));
+   label.textContent = changed
+     ? 'Color elegido: ' + hairNames[kind] + '. Comprueba el cabello y revisa que no cambien otras partes.'
+     : 'No encontré píxeles azules editables en esta textura. No se ha cambiado el modelo; necesitaremos ajustar la técnica.';
+ }
+ document.querySelectorAll('[data-hair]').forEach(btn => btn.addEventListener('click', () => setHairColor(btn.dataset.hair)));
+ setHairColor('blue');
+
+ const b2=new THREE.Box3().setFromObject(model);
+ model.position.y-=b2.min.y;
+ controls.target.set(0,1.05,0);
+ camera.position.set(0,1.55,4.7);
+ controls.update();
+ status.textContent='¡Nashael cargada con cabello azul experimental! Arrastra para verla desde distintos ángulos.';
+},progress=>{
+ if(progress.total>0){
+   status.textContent='Cargando modelo… '+Math.round(progress.loaded/progress.total*100)+'%';
+ }
+},e=>{
+ console.error('Error al cargar el GLB:',e);
+ status.textContent='El archivo existe, pero el visor no pudo interpretarlo. Prueba recargar en unos minutos; si persiste, revisaremos el formato del modelo.';
+});
+document.getElementById('spin').addEventListener('click',()=>{spinning=!spinning;document.getElementById('spin').textContent=spinning?'⏸ Detener giro':'⟳ Girar automáticamente';});
+document.getElementById('reset').addEventListener('click',()=>{camera.position.set(0,1.55,4.7);controls.target.set(0,1.05,0);controls.update();if(model){model.rotation.set(0,0,0);}});
+function animate(){requestAnimationFrame(animate);if(spinning&&model)model.rotation.y+=.006;controls.update();renderer.render(scene,camera);}
+animate();
+function resize(){const w=box.clientWidth,h=box.clientHeight;camera.aspect=w/h;camera.updateProjectionMatrix();renderer.setSize(w,h);}
+new ResizeObserver(resize).observe(box);
+</script>
+</body>
+</html>
