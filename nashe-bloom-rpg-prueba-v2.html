@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#102a83">
+<title>Nashe Bloom RPG — Nashael 3D</title>
+<style>
+:root{--navy:#08153f;--blue:#2457df;--bright:#65baff;--violet:#7854f5;--ink:#18244c;--muted:#7180a8;--pale:#f4f7ff}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 15% 0%,#2d50ce,#121e67 42%,#080e2b 88%);font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:#fff}.wrap{width:min(100%,780px);margin:auto;padding:14px 12px 30px}.top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}.brand{display:flex;align-items:center;gap:10px}.bird{width:42px;height:42px;flex:none;filter:drop-shadow(0 0 9px #64bfff)}.brand h1{font-size:20px;margin:0}.brand small{display:block;color:#c0d7ff;font-size:10px;letter-spacing:2px}.pill{font-size:10px;letter-spacing:.5px;background:#ffffff18;border:1px solid #ffffff35;border-radius:99px;padding:7px 9px;white-space:nowrap}.hero{border:1px solid #8ba8ff55;border-radius:22px;padding:18px;background:linear-gradient(130deg,#1b3fa7,#392b91);box-shadow:0 14px 38px #0004}.eyebrow{color:#b9d8ff;font-size:10px;font-weight:800;letter-spacing:2px}.hero h2{font-size:clamp(25px,6vw,34px);line-height:1.08;margin:8px 0}.hero p{color:#d7e4ff;font-size:13px;margin:0}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:15px}.stat{background:#0714406b;border:1px solid #ffffff20;border-radius:12px;padding:9px}.stat span{display:block;color:#bdd0ff;font-size:10px}.stat strong{font-size:18px;display:block;margin-top:3px}.progress{height:7px;background:#ffffff30;border-radius:99px;overflow:hidden;margin-top:9px}.progress div{height:100%;width:0;background:linear-gradient(90deg,#7bdcff,#c1a0ff)}.panel{background:var(--pale);color:var(--ink);border-radius:21px;padding:16px;margin-top:13px;box-shadow:0 10px 25px #0002}.panel h3{font-size:18px;margin:0 0 5px}.sub{color:var(--muted);font-size:12px;margin:0 0 12px}.viewer{position:relative;border-radius:17px;overflow:hidden;background:radial-gradient(ellipse at 50% 38%,#304cbb 0,#151d5d 55%,#080d2c 100%);height:350px;border:1px solid #8faaff55;touch-action:pan-y}.viewer canvas{display:block;width:100%;height:100%;touch-action:pan-y}.viewer-note{position:absolute;top:10px;left:10px;right:10px;display:flex;justify-content:space-between;gap:8px;pointer-events:none}.tag{font-size:10px;color:#e4eeff;background:#07143dbb;border:1px solid #ffffff25;border-radius:99px;padding:6px 8px}.viewer-help{position:absolute;bottom:9px;left:0;right:0;text-align:center;color:#d7e5ff;font-size:10px;text-shadow:0 1px 5px #000;pointer-events:none}.fallback{height:100%;display:flex;align-items:center;justify-content:center;text-align:center;padding:25px;color:#e4edff;font-size:13px}.tabs{display:flex;gap:7px;overflow:auto;padding:2px 0 5px;margin:12px 0}.tab{border:1px solid #dbe4ff;border-radius:99px;background:white;color:#40517f;padding:9px 12px;white-space:nowrap;font-weight:750;font-size:12px}.tab.active{background:#e6edff;border:2px solid #4b71ed;color:#1f3ca1}.fieldlabel{display:block;font-weight:750;font-size:12px;margin:11px 0 6px}input{width:100%;border:1px solid #cbd8fb;background:white;border-radius:11px;padding:11px;font:inherit;color:var(--ink)}.btn{border:0;border-radius:12px;background:linear-gradient(120deg,#2e61f0,#754fff);color:white;padding:11px 13px;font:inherit;font-weight:800;cursor:pointer}.btn.secondary{background:#e7edff;color:#2542a0;box-shadow:none}.btn:disabled{opacity:.45}.btnrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.btnrow .btn{flex:1}.items{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.item{border:1px solid #dce5ff;border-radius:13px;background:white;padding:11px;text-align:left;color:var(--ink);min-height:75px}.item strong{display:block;font-size:12px}.item small{display:block;font-size:10px;color:var(--muted);margin-top:4px}.item.locked{opacity:.55}.item.equipped{border:2px solid #4775ff;background:#edf2ff}.quest{display:flex;gap:9px;align-items:flex-start;border:1px solid #dfe7fb;background:white;border-radius:13px;padding:10px;margin-top:8px}.qbody{flex:1}.qbody strong{font-size:13px;display:block}.qbody small{font-size:11px;color:#7180a8;display:block;margin-top:3px}.xp{font-size:11px;color:#5b47c7;font-weight:800;white-space:nowrap}.quest button{border:1px solid #d7e1ff;border-radius:8px;background:#edf2ff;color:#2945a4;padding:7px;font-weight:750;font-size:11px;margin-top:7px}.message{font-size:12px;color:#2950bc;margin-top:8px;min-height:16px}.sectiongrid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.tile{border:1px solid #dce5ff;border-radius:13px;background:white;padding:11px;color:var(--ink);text-align:left}.tile strong{display:block;font-size:12px}.tile small{color:#7180a8;font-size:10px}.foot{text-align:center;color:#b6c8ff;font-size:10px;padding:15px 8px 0}.hidden{display:none!important}@media(min-width:620px){.twocol{display:grid;grid-template-columns:1fr 1fr;gap:13px}.twocol .panel{margin-top:13px}.viewer{height:430px}.items{grid-template-columns:repeat(3,minmax(0,1fr))}}
+</style>
+</head>
+<body><div class="wrap">
+<header class="top"><div class="brand"><svg class="bird" viewBox="0 0 64 64" aria-label="Colibrí azul" role="img"><defs><linearGradient id="bg" x1="0" y1="1" x2="1" y2="0"><stop stop-color="#38a4ff"/><stop offset="1" stop-color="#9ceaff"/></linearGradient></defs><path fill="url(#bg)" d="M7 36c10-5 16-12 19-23 8 7 12 15 10 22 8-5 14-12 21-20-1 13-7 22-18 28-8 5-18 5-27 1l-7 8 2-16z"/><path fill="#fff" d="M34 30 61 14 48 35z" opacity=".9"/><circle cx="37" cy="26" r="2" fill="#07133e"/></svg><div><h1>Nashe Bloom</h1><small>YOUR STORY AWAKENS</small></div></div><span class="pill">RPG · PRUEBA 2</span></header>
+<section class="hero"><div class="eyebrow">✦ TU AVENTURA COMIENZA ✦</div><h2 id="greeting">Welcome to the jungle, Nashael.</h2><p>Tus hábitos hacen crecer a tu heroína. Gana experiencia, equipa objetos y descubre poderes.</p><div class="stats"><div class="stat"><span>Nivel</span><strong id="level">1</strong></div><div class="stat"><span>Experiencia</span><strong id="xp">0 XP</strong></div><div class="stat"><span>Raza</span><strong id="raceStat">Elfa</strong></div></div><div class="progress"><div id="xpbar"></div></div></section>
+<div class="twocol">
+<section class="panel"><h3>🧝 Mi personaje</h3><p class="sub">Nashael · Elfa guerrera mística</p><div class="viewer" id="viewer"><div class="viewer-note"><span class="tag">MODELO 3D INTERACTIVO</span><span class="tag" id="equippedTag">Equipo inicial</span></div><div class="fallback" id="fallback">Preparando el visor 3D de Nashael…</div><div class="viewer-help">Arrastra para girar · Pellizca o usa dos dedos para acercar</div></div><div class="btnrow"><button class="btn secondary" id="rotateBtn">Girar personaje</button><button class="btn secondary" id="resetBtn">Vista frontal</button></div><div class="message" id="viewerMessage" aria-live="polite">El visor necesita conexión para cargar Three.js.</div></section>
+<section class="panel"><h3>🛡️ Personaliza a Nashael</h3><p class="sub">Desbloquea piezas ganando XP con misiones. Los cambios se guardan en este prototipo.</p><div class="tabs"><button class="tab active" data-tab="armor">Armadura</button><button class="tab" data-tab="hair">Cabello</button><button class="tab" data-tab="magic">Magia</button></div><div id="wardrobe" class="items"></div><div class="message" id="wardrobeMessage" aria-live="polite"></div></section>
+</div>
+<section class="panel"><h3>🧭 Misiones y experiencia</h3><p class="sub">Completa cada misión una vez en esta prueba. No hay compras; las recompensas se ganan jugando.</p>
+<div id="quests">
+<div class="quest"><span>💧</span><div class="qbody"><strong>Elixir de vida</strong><small>Tomar agua hoy</small><button class="btn secondary" data-quest="water">Completar misión</button></div><span class="xp">+20 XP</span></div>
+<div class="quest"><span>🏹</span><div class="qbody"><strong>Entrena tu puntería</strong><small>Practicar una habilidad unos minutos</small><button class="btn secondary" data-quest="practice">Completar misión</button></div><span class="xp">+25 XP</span></div>
+<div class="quest"><span>📜</span><div class="qbody"><strong>Un paso en tu historia</strong><small>Terminar una tarea pendiente</small><button class="btn secondary" data-quest="task">Completar misión</button></div><span class="xp">+30 XP</span></div>
+</div><div id="questMessage" class="message" aria-live="polite"></div></section>
+<section class="panel"><h3>🌌 Tu mundo</h3><p class="sub">Estas son las cinco secciones originales; en esta prueba son accesos de demostración.</p><div class="sectiongrid"><button class="tile" data-section="Ejercicios"><strong>🏹 Ejercicios</strong><small>Entrena tus habilidades</small></button><button class="tile" data-section="Hábitos diarios"><strong>🌱 Hábitos diarios</strong><small>Construye tu racha</small></button><button class="tile" data-section="Pendientes"><strong>📜 Pendientes</strong><small>Completa tus objetivos</small></button><button class="tile" data-section="Progreso"><strong>🔮 Progreso</strong><small>Mira cuánto has crecido</small></button><button class="tile" data-section="Notas personales"><strong>📖 Notas personales</strong><small>Guarda tus ideas</small></button></div><div id="sectionMessage" class="message" aria-live="polite"></div></section>
+<div class="foot">Nashe Bloom RPG · Prueba independiente · No modifica los datos de la app original. El modelo se genera en el navegador; conexión necesaria para cargar Three.js.</div>
+</div>
+<script type="module">
+const KEY='nasheBloom_rpg_test_v2';
+const defaults={name:'Nashael',race:'Elfa',xp:0,completed:[],equipment:{armor:'basic',hair:'blue',magic:'spark'}};
+let data;try{data=JSON.parse(localStorage.getItem(KEY)||'null')||defaults}catch(e){data=structuredClone(defaults)}
+data={...defaults,...data,equipment:{...defaults.equipment,...(data.equipment||{})}};
+const $=id=>document.getElementById(id);
+const rewards={water:20,practice:25,task:30};
+const wardrobe={
+ armor:[{id:'basic',name:'Armadura azul inicial',desc:'Disponible desde el inicio',cost:0,color:0x234fbd,metal:0x9ebde9},{id:'royal',name:'Armadura real',desc:'Se desbloquea con 50 XP',cost:50,color:0x482b99,metal:0xe2c8ff},{id:'celestial',name:'Armadura celestial',desc:'Se desbloquea con 100 XP',cost:100,color:0x167fa5,metal:0xd7f3ff}],
+ hair:[{id:'blue',name:'Azul eléctrico',desc:'Estilo inicial',cost:0,color:0x1238a9},{id:'silver',name:'Plateado lunar',desc:'Se desbloquea con 50 XP',cost:50,color:0x9cb9ee},{id:'violet',name:'Violeta arcano',desc:'Se desbloquea con 100 XP',cost:100,color:0x612cc4}],
+ magic:[{id:'spark',name:'Destellos azules',desc:'Efecto inicial',cost:0,color:0x36aaff},{id:'crystal',name:'Cristales lunares',desc:'Se desbloquea con 50 XP',cost:50,color:0x8deaff},{id:'phoenix',name:'Aura estelar',desc:'Se desbloquea con 100 XP',cost:100,color:0xc39aff}]
+};
+let activeTab='armor';
+function save(){try{localStorage.setItem(KEY,JSON.stringify(data))}catch(e){}}
+function unlocked(item){return data.xp>=item.cost}
+function render(){
+ $('greeting').textContent=`Welcome to the jungle, ${data.name||'Nashael'}.`;
+ $('level').textContent=Math.floor(data.xp/100)+1;$('xp').textContent=data.xp+' XP';$('raceStat').textContent=data.race||'Elfa';$('xpbar').style.width=(data.xp%100)+'%';
+ document.querySelectorAll('[data-quest]').forEach(b=>{let done=data.completed.includes(b.dataset.quest);b.textContent=done?'Misión completada ✓':'Completar misión';b.disabled=done;});
+ const selected=wardrobe[activeTab].find(x=>x.id===data.equipment[activeTab]);$('equippedTag').textContent=selected?selected.name:'Equipo inicial';
+ $('wardrobe').innerHTML='';
+ wardrobe[activeTab].forEach(item=>{const isOn=data.equipment[activeTab]===item.id;const can=unlocked(item);const b=document.createElement('button');b.className='item'+(isOn?' equipped':'')+(!can?' locked':'');b.innerHTML=`<strong>${isOn?'✓ ':''}${item.name}</strong><small>${can?(isOn?'Equipado':'Tocar para equipar'):'🔒 Requiere '+item.cost+' XP'}</small>`;b.addEventListener('click',()=>{if(!unlocked(item)){$('wardrobeMessage').textContent=`Necesitas ${item.cost} XP para desbloquearlo.`;return}data.equipment[activeTab]=item.id;save();render();updateCharacter();$('wardrobeMessage').textContent='¡Equipo actualizado!'});$('wardrobe').appendChild(b)});
+ document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('active',b.dataset.tab===activeTab));
+}
+document.querySelectorAll('[data-tab]').forEach(b=>b.addEventListener('click',()=>{activeTab=b.dataset.tab;render()}));
+document.querySelectorAll('[data-quest]').forEach(b=>b.addEventListener('click',()=>{const id=b.dataset.quest;if(data.completed.includes(id))return;data.completed.push(id);data.xp+=rewards[id];save();render();updateCharacter();$('questMessage').textContent=`¡Misión completada! Ganaste ${rewards[id]} XP. Nuevas piezas se desbloquean al alcanzar 50 y 100 XP.`}));
+document.querySelectorAll('[data-section]').forEach(b=>b.addEventListener('click',()=>$('sectionMessage').textContent=`“${b.dataset.section}” seguirá en la app. La conexión con las funciones originales se hará después de validar este personaje 3D.`));
+render();
+let THREE,scene,camera,renderer,group,hairGroup,armorParts=[],magicGroup,rotation=0,drag=false,lastX=0,zoom=7;
+function mat(color,metalness=.15,roughness=.45,emissive=0x000000){return new THREE.MeshStandardMaterial({color,metalness,roughness,emissive,emissiveIntensity:emissive?0.5:0})}
+function mesh(geo,material,parent=group,pos=[0,0,0],rot=[0,0,0],scale=[1,1,1]){const m=new THREE.Mesh(geo,material);m.position.set(...pos);m.rotation.set(...rot);m.scale.set(...scale);parent.add(m);m.castShadow=true;m.receiveShadow=true;return m}
+function sphere(parent,material,pos,scale){return mesh(new THREE.SphereGeometry(1,16,12),material,parent,pos,[0,0,0],scale)}
+function cylinder(parent,material,pos,r1,r2,h,rot=[0,0,0]){return mesh(new THREE.CylinderGeometry(r1,r2,h,12),material,parent,pos,rot)}
+function makeCharacter(){
+ const skin=mat(0xf0c9b8,.05,.65),blue=mat(0x234fbd,.45,.3),silver=mat(0xaec9ee,.65,.25),dark=mat(0x10265c,.25,.4),gold=mat(0xe7c878,.6,.25),eye=mat(0x45c9ff,.1,.2,0x087dff),hairMat=mat(0x1238a9,.35,.28),glow=mat(0x40aaff,.1,.25,0x168dff),cloth=mat(0x2436a2,.1,.5);
+ group=new THREE.Group();scene.add(group);
+ // boots and legs
+ for(const side of [-1,1]){cylinder(group,dark,[side*.22,.48,0],.095,.12,.68);sphere(group,blue,[side*.22,.16,.09],[.14,.11,.23]);cylinder(group,skin,[side*.22,.92,0],.09,.1,.25);mesh(new THREE.BoxGeometry(.25,.24,.18),blue,group,[side*.22,1.18,0]);}
+ // torso and waist
+ mesh(new THREE.CylinderGeometry(.22,.34,.62,8),blue,group,[0,1.65,0]);
+ mesh(new THREE.CylinderGeometry(.28,.22,.13,8),gold,group,[0,1.31,0]);
+ mesh(new THREE.CylinderGeometry(.18,.24,.28,8),dark,group,[0,1.1,0]);
+ // breastplate and chest gem
+ mesh(new THREE.SphereGeometry(1,16,12),silver,group,[0,1.72,.12],[.28,.31,.16]);
+ mesh(new THREE.SphereGeometry(1,12,10),blue,group,[0,1.72,.2],[.22,.25,.09]);
+ mesh(new THREE.OctahedronGeometry(.09),glow,group,[0,1.7,.29]);
+ // shoulders, arms, hands
+ for(const side of [-1,1]){
+  sphere(group,silver,[side*.35,1.9,0],[.18,.15,.18]);
+  cylinder(group,blue,[side*.44,1.62,.02],.09,.12,.42,[0,0,side*.2]);
+  sphere(group,skin,[side*.49,1.38,.04],[.09,.09,.09]);
+  // elf ear
+  mesh(new THREE.ConeGeometry(.07,.28,8),skin,group,[side*.2,2.42,0],[0,0,side*-Math.PI/2]);
+ }
+ // neck, head, ears, face
+ cylinder(group,skin,[0,2.08,0],.075,.075,.18);
+ sphere(group,skin,[0,2.35,.015],[.2,.25,.18]);
+ for(const side of [-1,1]){mesh(new THREE.ConeGeometry(.065,.24,8),skin,group,[side*.22,2.38,0],[0,0,side*-Math.PI/2]);sphere(group,eye,[side*.075,2.38,.178],[.028,.025,.018]);}
+ // brow/tiara
+ mesh(new THREE.TorusGeometry(.18,.025,6,16,Math.PI),gold,group,[0,2.49,.02],[0,0,Math.PI]);
+ mesh(new THREE.OctahedronGeometry(.055),glow,group,[0,2.49,.19]);
+ hairGroup=new THREE.Group();group.add(hairGroup);
+ const hair=mat(0x1238a9,.25,.3,0x071d75);
+ sphere(hairGroup,hair,[0,2.51,-.055],[.22,.17,.2]);
+ // flowing hair back locks
+ for(let i=0;i<7;i++){const x=(i-3)*.052;mesh(new THREE.CylinderGeometry(.035,.015,.65+(i%3)*.12,7),hair,hairGroup,[x,2.13,-.13],[0,0,(i-3)*.035]);}
+ // cape and cloth tails
+ mesh(new THREE.ConeGeometry(.28,.85,8,1,true),cloth,group,[0,1.28,-.17],[Math.PI,0,0],[1,.8,.6]);
+ for(let i=0;i<3;i++){mesh(new THREE.BoxGeometry(.13,.68,.035),blue,group,[(i-1)*.14,.88,-.08],[0,0,(i-1)*-.12]);}
+ // magic orb and hummingbird glyph
+ magicGroup=new THREE.Group();group.add(magicGroup);
+ sphere(magicGroup,glow,[.57,1.52,.06],[.09,.09,.09]);
+ for(let i=0;i<3;i++){const ring=mesh(new THREE.TorusGeometry(.14+i*.06,.008,6,32),glow,magicGroup,[.57,1.52,.06],[i*.7,i*.6,0]);ring.userData.magicRing=true;}
+ const birdShape=new THREE.Shape();birdShape.moveTo(0,0);birdShape.quadraticCurveTo(.13,.12,.11,.25);birdShape.quadraticCurveTo(.23,.17,.33,.27);birdShape.quadraticCurveTo(.26,.06,.1,.02);birdShape.lineTo(-.08,-.03);birdShape.lineTo(-.18,.04);birdShape.lineTo(-.1,-.08);birdShape.quadraticCurveTo(-.02,-.1,0,0);
+ mesh(new THREE.ShapeGeometry(birdShape),glow,magicGroup,[.55,1.93,.1],[0,0,0],[.8,.8,.8]);
+ armorParts=[{mesh:group,kind:'armor'}];
+}
+function updateCharacter(){if(!group)return;const armor=wardrobe.armor.find(x=>x.id===data.equipment.armor);const hair=wardrobe.hair.find(x=>x.id===data.equipment.hair);const magic=wardrobe.magic.find(x=>x.id===data.equipment.magic);group.traverse(o=>{if(o.isMesh&&o.material&&o.material.color){if(o.geometry.type==='CylinderGeometry'||o.geometry.type==='BoxGeometry'){if(o.position.y>1.3&&o.position.y<2.1&&o.material.color.getHex()===0x234fbd&&armor)o.material.color.setHex(armor.color);}}});if(hairGroup)hairGroup.traverse(o=>{if(o.isMesh&&o.material&&o.material.color&&o.material.color.getHex()!==0xf0c9b8)o.material.color.setHex(hair.color)});if(magicGroup)magicGroup.traverse(o=>{if(o.isMesh&&o.material&&o.material.color){o.material.color.setHex(magic.color);if(o.material.emissive)o.material.emissive.setHex(magic.color)}})}
+function animate(){if(!renderer)return;requestAnimationFrame(animate);if(group){group.rotation.y=rotation;group.position.y=Math.sin(Date.now()*.0018)*.025;magicGroup.rotation.y+=.012;magicGroup.children.forEach(o=>{if(o.userData.magicRing)o.rotation.z+=.02})}renderer.render(scene,camera)}
+async function init3D(){try{
+ const mod=await import('https://cdn.jsdelivr.net/npm/three@0.164.1/build/three.module.js');THREE=mod;
+ const el=$('viewer');scene=new THREE.Scene();scene.background=null;scene.fog=new THREE.Fog(0x111a50,7,15);
+ camera=new THREE.PerspectiveCamera(34,el.clientWidth/el.clientHeight,.1,50);camera.position.set(0,1.55,7);camera.lookAt(0,1.35,0);
+ renderer=new THREE.WebGLRenderer({antialias:false,alpha:true,powerPreference:'low-power'});renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,1.5));renderer.setSize(el.clientWidth,el.clientHeight);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.15;el.insertBefore(renderer.domElement,el.querySelector('.viewer-help'));$('fallback').remove();
+ scene.add(new THREE.HemisphereLight(0x9fcaff,0x12153c,2));
+ const key=new THREE.DirectionalLight(0xc6e4ff,3);key.position.set(3,5,4);scene.add(key);const rim=new THREE.PointLight(0x246aff,18,8);rim.position.set(-2,2,1);scene.add(rim);const back=new THREE.PointLight(0x6d46ff,13,8);back.position.set(2,2,-2);scene.add(back);
+ // simple circular display platform
+ const platform= new THREE.Mesh(new THREE.CylinderGeometry(1.25,1.35,.12,48),new THREE.MeshStandardMaterial({color:0x1b2b76,metalness:.65,roughness:.3,emissive:0x09164f}));platform.position.y=-.02;scene.add(platform);
+ const ring=new THREE.Mesh(new THREE.TorusGeometry(1.18,.018,6,64),new THREE.MeshStandardMaterial({color:0x50caff,emissive:0x168dff,emissiveIntensity:1.5}));ring.rotation.x=Math.PI/2;ring.position.y=.05;scene.add(ring);
+ makeCharacter();updateCharacter();
+ const resize=()=>{const w=el.clientWidth,h=el.clientHeight;if(!w||!h)return;camera.aspect=w/h;camera.updateProjectionMatrix();renderer.setSize(w,h)};new ResizeObserver(resize).observe(el);
+ let startY=null;renderer.domElement.addEventListener('pointerdown',e=>{drag=true;lastX=e.clientX;startY=e.clientY;renderer.domElement.setPointerCapture(e.pointerId)});renderer.domElement.addEventListener('pointermove',e=>{if(drag){rotation+=(e.clientX-lastX)*.012;lastX=e.clientX}});renderer.domElement.addEventListener('pointerup',()=>drag=false);renderer.domElement.addEventListener('pointercancel',()=>drag=false);
+ renderer.domElement.addEventListener('wheel',e=>{zoom=Math.max(5,Math.min(9,zoom+e.deltaY*.008));camera.position.z=zoom;camera.lookAt(0,1.35,0)},{passive:true});
+ $('rotateBtn').addEventListener('click',()=>{rotation+=Math.PI/2;$('viewerMessage').textContent='Vista girada. También puedes arrastrar a Nashael con el dedo.'});$('resetBtn').addEventListener('click',()=>{rotation=0;zoom=7;camera.position.set(0,1.55,zoom);camera.lookAt(0,1.35,0);$('viewerMessage').textContent='Vista frontal restaurada.'});
+ $('viewerMessage').textContent='¡Nashael está en 3D! Arrastra para verla desde distintos ángulos.';
+ animate();
+ }catch(err){$('fallback').innerHTML='No se pudo cargar el motor 3D. Comprueba tu conexión a internet y vuelve a abrir esta página.<br><br>La experiencia necesita cargar Three.js desde un servidor externo.';$('viewerMessage').textContent='El visor 3D no se inició; el resto de la prueba sigue disponible.';}}
+init3D();
+</script></body></html>
