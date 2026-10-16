@@ -50,6 +50,7 @@ footer{text-align:center;color:#64748b;font-size:12px;padding:20px}
       <button class="card" data-open="Pendientes"><img class="card-image" src="pendientes.png" alt="Pendientes"><strong>Pendientes</strong></button>
       <button class="card" data-open="Progreso"><img class="card-image" src="progreso.png" alt="Progreso"><strong>Progreso</strong></button>
       <button class="card" data-open="Notas personales"><img class="card-image" src="notas-personales.png" alt="Notas personales"><strong>Notas personales</strong></button>
+      <button class="card" data-rpg-viewer><span class="card-image" style="display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#10234f,#1769e0);font-size:64px" aria-hidden="true">🏹</span><strong>Nashael · Mundo RPG</strong><p class="subtle">Abre tu personaje en 3D</p></button>
     </div>
     <p class="subtle" style="text-align:center;margin-top:20px">Tus pequeños avances también cuentan 💙</p>
   </section>
@@ -106,6 +107,7 @@ function render(name){
  panel.innerHTML=out;
 }
 document.addEventListener('click',e=>{
+ const rpg=e.target.closest('[data-rpg-viewer]');if(rpg){window.location.href='nashe-bloom-nashael-espada-en-mano-v3.html';return}
  const opener=e.target.closest('[data-open]');if(opener){openSection(opener.dataset.open);return}
  const nav=e.target.closest('[data-nav]');if(nav){if(nav.dataset.nav==='Inicio')goHome();else openSection(nav.dataset.nav);return}
  if(e.target.closest('[data-home]')){goHome();return}
