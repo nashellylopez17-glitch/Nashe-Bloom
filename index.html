@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#1769e0">
-  <link rel="manifest" href="/Nashe-Bloom/manifest.webmanifest">
+<link rel="manifest" href="/Nashe-Bloom/manifest.webmanifest">
 <title>Nashe Bloom</title>
 <style>
 :root{--blue:#1769e0;--navy:#183153;--pale:#f2f6ff;--red:#e34b55;--yellow:#e8a52b;--green:#198754}
@@ -16,7 +16,8 @@ main{max-width:700px;margin:auto;padding:22px 16px}
 h2{font-size:23px;margin:8px 0 18px}
 .menu{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
 .card{background:white;border:1px solid #e0e8f7;border-radius:22px;padding:18px 16px;min-height:126px;text-align:left;color:var(--navy);box-shadow:0 5px 16px #163b6610;cursor:pointer;font:inherit}
-.card .emoji{display:block;font-size:30px;margin-bottom:12px}.card strong{font-size:18px}
+.card-image{display:block;width:100%;height:150px;object-fit:cover;border-radius:16px;margin-bottom:12px}
+.card strong{font-size:18px}
 .panel{background:white;border-radius:24px;padding:20px;margin-top:18px;box-shadow:0 5px 18px #163b660a}
 .hidden{display:none!important}.back{border:0;background:#e8f0ff;color:var(--blue);font-weight:bold;border-radius:12px;padding:10px 13px;margin-bottom:15px;font-size:15px}
 .subtle{color:#64748b;font-size:14px;line-height:1.45}
@@ -44,11 +45,11 @@ footer{text-align:center;color:#64748b;font-size:12px;padding:20px}
   <section id="home">
     <h2>¿Qué vamos a hacer hoy?</h2>
     <div class="menu">
-      <button class="card" data-open="Ejercicios"><span class="emoji">🏋️</span><strong>Ejercicios</strong></button>
-      <button class="card" data-open="Hábitos diarios"><span class="emoji">🌱</span><strong>Hábitos diarios</strong></button>
-      <button class="card" data-open="Pendientes"><span class="emoji">✅</span><strong>Pendientes</strong></button>
-      <button class="card" data-open="Progreso"><span class="emoji">📈</span><strong>Progreso</strong></button>
-      <button class="card" data-open="Notas personales"><span class="emoji">📝</span><strong>Notas personales</strong></button>
+      <button class="card" data-open="Ejercicios"><img class="card-image" src="ejercicios.png" alt="Ejercicios"><strong>Ejercicios</strong></button>
+      <button class="card" data-open="Hábitos diarios"><img class="card-image" src="habitos-diarios.png" alt="Hábitos diarios"><strong>Hábitos diarios</strong></button>
+      <button class="card" data-open="Pendientes"><img class="card-image" src="pendientes.png" alt="Pendientes"><strong>Pendientes</strong></button>
+      <button class="card" data-open="Progreso"><img class="card-image" src="progreso.png" alt="Progreso"><strong>Progreso</strong></button>
+      <button class="card" data-open="Notas personales"><img class="card-image" src="notas-personales.png" alt="Notas personales"><strong>Notas personales</strong></button>
     </div>
     <p class="subtle" style="text-align:center;margin-top:20px">Tus pequeños avances también cuentan 💙</p>
   </section>
@@ -115,12 +116,12 @@ document.addEventListener('click',e=>{
 document.addEventListener('submit',e=>{const form=e.target.closest('[data-add]');if(!form)return;e.preventDefault();const value=form.elements.value.value.trim();if(!value)return;const key=form.dataset.add;if(key==='habit')state.habits.push({name:value,days:[false,false,false,false,false,false,false]});else if(key==='notes')state.notes.push({text:value,done:false});else state[key].push({text:value,done:false});save();const title=key==='habit'?'Hábitos diarios':key==='exercises'?'Ejercicios':key==='tasks'?'Pendientes':'Notas personales';render(title)});
 save();
 </script>
-</body>
-  <script>
+<script>
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('/Nashe-Bloom/service-worker.js');
   });
 }
-  </script>
+</script>
+</body>
 </html>
