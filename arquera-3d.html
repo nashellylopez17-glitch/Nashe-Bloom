@@ -1,0 +1,81 @@
+
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nashael 3D | Nashe Bloom</title>
+<style>
+body{margin:0;font-family:Arial,sans-serif;background:#10234f;color:white;text-align:center}
+header{padding:20px;background:#1769e0}
+main{padding:16px;max-width:800px;margin:auto}
+#viewer{height:65vh;min-height:360px;background:linear-gradient(#183153,#07142c);border-radius:20px;overflow:hidden}
+p{line-height:1.5}
+button{border:0;border-radius:12px;padding:12px 18px;background:#1769e0;color:white;font-size:16px}
+#status{color:#c8dcff}
+a{color:#c8dcff}
+</style>
+</head>
+<body>
+<header><h1>🏹 Nashael</h1><p>Tu arquera de Nashe Bloom</p></header>
+<main>
+<div id="viewer"></div>
+<p id="status">Cargando a Nashael...</p>
+<p>Arrastra sobre el personaje para girarlo.</p>
+<button onclick="location.href='index.html'">Volver a Nashe Bloom</button>
+</main>
+<script type="importmap">
+{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}
+</script>
+<script type="module">
+import * as THREE from 'three';
+import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
+
+const viewer=document.getElementById('viewer');
+const status=document.getElementById('status');
+const scene=new THREE.Scene();
+scene.background=new THREE.Color('#10234f');
+const camera=new THREE.PerspectiveCamera(35,1,0.1,100);
+camera.position.set(0,1.5,5);
+const renderer=new THREE.WebGLRenderer({antialias:true,alpha:false});
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+renderer.outputColorSpace=THREE.SRGBColorSpace;
+viewer.appendChild(renderer.domElement);
+const controls=new OrbitControls(camera,renderer.domElement);
+controls.enableDamping=true;
+controls.target.set(0,1,0);
+scene.add(new THREE.HemisphereLight(0xffffff,0x456080,2));
+const light=new THREE.DirectionalLight(0xffffff,3);
+light.position.set(3,5,4);scene.add(light);
+const platform=new THREE.Mesh(new THREE.CylinderGeometry(1.1,1.1,.12,64),new THREE.MeshStandardMaterial({color:0x1769e0,metalness:.35,roughness:.4}));
+platform.position.y=-.08;scene.add(platform);
+
+function resize(){
+ const w=viewer.clientWidth,h=viewer.clientHeight;
+ camera.aspect=w/h;camera.updateProjectionMatrix();renderer.setSize(w,h);
+}
+new ResizeObserver(resize).observe(viewer);resize();
+
+new GLTFLoader().load('./nashael-arquera-cabello-azul.glb',gltf=>{
+ const model=gltf.scene;
+ scene.add(model);
+ const box=new THREE.Box3().setFromObject(model);
+ const size=box.getSize(new THREE.Vector3());
+ const center=box.getCenter(new THREE.Vector3());
+ model.position.sub(center);
+ const maxDim=Math.max(size.x,size.y,size.z);
+ if(maxDim>0)model.scale.setScalar(2.5/maxDim);
+ model.position.y-=box.min.y-center.y;
+ controls.target.set(0,.9,0);
+ camera.position.set(0,1.5,5);
+ status.textContent='¡Nashael está lista! 💙 Arrastra para girarla.';
+},undefined,error=>{
+ console.error(error);
+ status.textContent='No se pudo cargar el modelo. Revisa el archivo GLB y la conexión.';
+});
+function animate(){requestAnimationFrame(animate);controls.update();renderer.render(scene,camera)}
+animate();
+</script>
+</body>
+</html>
