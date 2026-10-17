@@ -71,8 +71,8 @@ new GLTFLoader().load('./nashael-arquera-cabello-azul.glb',gltf=>{
  camera.position.set(0,1.5,5);
  status.textContent='¡Nashael está lista! 💙 Arrastra para girarla.';
 },undefined,error=>{
- console.error(error);
- status.textContent='No se pudo cargar el modelo. Revisa el archivo GLB y la conexión.';
+  console.error('Error al cargar Nashael:',error);
+  status.textContent='Error al cargar Nashael: '+(error.message||error.type||'revisa la conexión');
 });
 function animate(){requestAnimationFrame(animate);controls.update();renderer.render(scene,camera)}
 animate();
