@@ -28,10 +28,7 @@ a{color:#c8dcff}
 {"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}
 </script>
 <script type="module">
-import * as THREE from 'three';
-import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
-import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
-
+import {MeshoptDecoder} from 'three/addons/libs/meshopt_decoder.module.js';
 const viewer=document.getElementById('viewer');
 const status=document.getElementById('status');
 const scene=new THREE.Scene();
@@ -60,7 +57,9 @@ new ResizeObserver(resize).observe(viewer);resize();
 new GLTFLoader().load('./nashael-arquera-cabello-azul.glb',gltf=>{
  const model=gltf.scene;
  scene.add(model);
- const box=new THREE.Box3().setFromObject(model);
+ const loader = new GLTFLoader();
+loader.setMeshoptDecoder(MeshoptDecoder);
+loader.load('./nashael-arquera-cabello-azul.glb',gltf=>{
  const size=box.getSize(new THREE.Vector3());
  const center=box.getCenter(new THREE.Vector3());
  model.position.sub(center);
