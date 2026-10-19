@@ -97,9 +97,8 @@ window.loadCharacter=async function(name){
   controls.update();
   document.getElementById('status').textContent=name+' lista 💙 Arrastra para girar.';
  },undefined,e=>{
-  if(id===request)document.getElementById('status').textContent='No se pudo cargar este modelo. Revisa el nombre del archivo.';
- });
-};
+  if(id===request)document.getElementById('status').textContent='Error: '+(e.message||e.type||JSON.stringify(e));
+});
 
 function resize(){
  const el=document.getElementById('scene');
