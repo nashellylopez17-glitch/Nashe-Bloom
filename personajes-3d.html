@@ -1,1 +1,112 @@
 
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nashe Bloom - Personajes</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#07152f;color:#eaf4ff;font-family:Arial,sans-serif;text-align:center}
+h1{color:#55baff;margin:22px 8px 8px}
+p{color:#b9d9ff}
+.buttons{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;padding:10px}
+button{background:#123d70;color:white;border:1px solid #55baff;border-radius:12px;padding:13px 16px;font-size:15px}
+button:active{background:#087dcc}
+#scene{width:100%;height:58vh;min-height:300px}
+#status{padding:12px;color:#b9d9ff}
+</style>
+</head>
+<body>
+<h1>NASHE BLOOM</h1>
+<p>Elige tu personaje</p>
+<div class="buttons">
+<button onclick="loadCharacter('arquera')">🏹 Arquera</button>
+<button onclick="loadCharacter('guerrera')">🛡️ Guerrera</button>
+<button onclick="loadCharacter('maga')">✨ Maga</button>
+</div>
+<div id="scene"></div>
+<div id="status">Preparando personajes...</div>
+
+<script type="module">
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js';
+import {GLTFLoader} from 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/loaders/GLTFLoader.js';
+import {OrbitControls} from 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/controls/OrbitControls.js';
+
+const scene=new THREE.Scene();
+scene.background=new THREE.Color(0x07152f);
+const camera=new THREE.PerspectiveCamera(45,1,0.1,1000);
+camera.position.set(0,1.5,5);
+const renderer=new THREE.WebGLRenderer({antialias:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+renderer.outputColorSpace=THREE.SRGBColorSpace;
+document.getElementById('scene').appendChild(renderer.domElement);
+renderer.domElement.style.width='100%';
+renderer.domElement.style.height='100%';
+
+scene.add(new THREE.HemisphereLight(0xc4e5ff,0x17213d,2));
+const light=new THREE.DirectionalLight(0xffffff,2.5);
+light.position.set(3,5,5);
+scene.add(light);
+const platform=new THREE.Mesh(
+ new THREE.CylinderGeometry(1.2,1.35,0.15,48),
+ new THREE.MeshStandardMaterial({color:0x174b80,metalness:0.5,roughness:0.35})
+);
+platform.position.y=-0.08;
+scene.add(platform);
+
+const controls=new OrbitControls(camera,renderer.domElement);
+controls.enableDamping=true;
+controls.target.set(0,1,0);
+const loader=new GLTFLoader();
+let current=null;
+let request=0;
+
+const models={
+ arquera:'nashael-arquera-cabello-azul.glb',
+ guerrera:'aiprintgen_Fantasy Warrior Woman with Horns and Sword-preview.glb',
+ maga:'aiprintgen_Anime Elf Mage with Staff Figurine-preview.glb'
+};
+
+window.loadCharacter=async function(name){
+ const id=++request;
+ document.getElementById('status').textContent='Cargando '+name+'...';
+ loader.load(encodeURI(models[name]),g=>{
+  if(id!==request)return;
+  if(current)scene.remove(current);
+  current=g.scene;
+  const box=new THREE.Box3().setFromObject(current);
+  const size=box.getSize(new THREE.Vector3());
+  const center=box.getCenter(new THREE.Vector3());
+  current.position.x-=center.x;
+  current.position.z-=center.z;
+  current.position.y-=box.min.y;
+  const max=Math.max(size.x,size.y,size.z);
+  const scale=2.8/(max||1);
+  current.scale.setScalar(scale);
+  scene.add(current);
+  controls.target.set(0,size.y*scale*0.5,0);
+  camera.position.set(0,size.y*scale*0.65+1.2,Math.max(3.5,max*scale*2.2));
+  controls.update();
+  document.getElementById('status').textContent=name+' lista 💙 Arrastra para girar.';
+ },undefined,e=>{
+  if(id===request)document.getElementById('status').textContent='No se pudo cargar este modelo. Revisa el nombre del archivo.';
+ });
+};
+
+function resize(){
+ const el=document.getElementById('scene');
+ const w=el.clientWidth,h=el.clientHeight;
+ camera.aspect=w/h;
+ camera.updateProjectionMatrix();
+ renderer.setSize(w,h,false);
+}
+window.addEventListener('resize',resize);
+resize();
+function animate(){requestAnimationFrame(animate);controls.update();renderer.render(scene,camera)}
+animate();
+loadCharacter('arquera');
+</script>
+</body>
+</html>
+
