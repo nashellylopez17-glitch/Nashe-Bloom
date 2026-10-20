@@ -68,6 +68,7 @@ const controls=new OrbitControls(camera,renderer.domElement);
 controls.enableDamping=true;
 controls.target.set(0,1,0);
 const loader=new GLTFLoader();
+  loader.setMeshoptDecoder(MeshoptDecoder);
 let current=null;
 let request=0;
 
