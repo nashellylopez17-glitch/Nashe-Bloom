@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Nashe Bloom — Vestidor de Nashael</title>
+<style>
+:root{color-scheme:dark;--bg:#07152f;--blue:#55baff;--text:#eef5ff;--muted:#b9d9ff}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(160deg,#07152f,#152b70);color:var(--text);font-family:Arial,sans-serif}
+main{max-width:1000px;margin:auto;padding:20px}h1{color:var(--blue);margin:6px 0;font-size:clamp(28px,5vw,42px)}p{color:var(--muted);line-height:1.45}
+.layout{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(260px,.8fr);gap:16px}.panel{background:#0c1d43ef;border:1px solid #3978bc;border-radius:20px;padding:16px;min-width:0}
+#scene{width:100%;height:min(65vh,620px);min-height:360px;border-radius:14px;overflow:hidden;background:#08142f}.status{font-size:14px;color:#b9d9ff;min-height:38px}
+.controls{display:grid;gap:12px}.group{border:1px solid #2e5793;border-radius:14px;padding:12px}h2{font-size:17px;margin:0 0 10px;color:#bce4ff}
+button{font-size:15px;color:white;background:#173d78;border:1px solid #55baff;border-radius:12px;padding:11px 12px}button[aria-pressed=true]{background:#087dcc;outline:2px solid #a4e1ff}
+.options{display:flex;flex-wrap:wrap;gap:8px}.note{font-size:13px;color:#b9d9ff}
+@media(max-width:700px){.layout{grid-template-columns:1fr}#scene{height:55vh;min-height:320px}main{padding:14px}}
+</style>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
+</head><body><main>
+<h1>Vestidor de Nashael</h1><p>Una sola protagonista. Este prototipo es independiente y no modifica tus hábitos de Nashe Bloom.</p>
+<div class="layout"><section class="panel">
+<div id="scene" aria-label="Visor 3D de Nashael"></div><p id="status" class="status">Preparando el visor 3D…</p>
+<p class="note">Arrastra para girar el modelo. Usa dos dedos para acercar o alejar en móvil.</p></section>
+<section class="panel controls">
+<div class="group"><h2>Cabello · prueba de color</h2><div class="options" id="hairOptions">
+<button data-hair="#168cff" aria-pressed="true">💙 Azul eléctrico</button><button data-hair="#d9e2f2" aria-pressed="false">🩶 Plateado</button><button data-hair="#171923" aria-pressed="false">🖤 Negro</button><button data-hair="#9b63f6" aria-pressed="false">💜 Violeta</button></div>
+<p class="note">El color solo cambia si el modelo identifica materiales de cabello por nombre. Si no, no alteraremos otros materiales por accidente.</p></div>
+<div class="group"><h2>Arma equipada</h2><div class="options" id="weaponOptions">
+<button data-weapon="bow" aria-pressed="true">🏹 Arco</button><button data-weapon="sword" aria-pressed="false">⚔️ Espada</button><button data-weapon="staff" aria-pressed="false">✨ Bastón mágico</button><button data-weapon="none" aria-pressed="false">Sin arma</button></div>
+<p class="note">Las armas son accesorios 3D de prueba; por ahora se muestran junto al personaje, no sujetas a la mano.</p></div>
+<div class="group"><h2>Guardar apariencia</h2><div class="options"><button id="save">Guardar elección</button><button id="reset">Restablecer</button></div><p id="saved" class="status">Las elecciones se guardan en este dispositivo.</p></div>
+<div class="group"><h2>Próxima etapa: vestuario real</h2><p class="note">La ropa y los peinados intercambiables requieren piezas 3D compatibles con el modelo actual. No se inventarán prendas que aún no estén integradas.</p></div>
+</section></div></main>
+<script type="module">
+import * as THREE from 'three';
+import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
+import {MeshoptDecoder} from 'three/addons/libs/meshopt_decoder.module.js';
+const mount=document.getElementById('scene'),status=document.getElementById('status');
+const scene=new THREE.Scene();scene.background=new THREE.Color(0x08142f);
+const camera=new THREE.PerspectiveCamera(40,1,.01,100);camera.position.set(0,1.5,5);
+let renderer;
+try{renderer=new THREE.WebGLRenderer({antialias:true,alpha:false});}
+catch(e){status.textContent='ERROR: el navegador no pudo iniciar WebGL para el visor 3D. Prueba Chrome actualizado.';throw e;}
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.outputColorSpace=THREE.SRGBColorSpace;mount.appendChild(renderer.domElement);
+renderer.domElement.style.width='100%';renderer.domElement.style.height='100%';
+scene.add(new THREE.HemisphereLight(0xc4e5ff,0x17213d,2));
+const light=new THREE.DirectionalLight(0xffffff,2.5);light.position.set(3,5,5);scene.add(light);
+const platform=new THREE.Mesh(new THREE.CylinderGeometry(1.2,1.35,.15,48),new THREE.MeshStandardMaterial({color:0x174bff,metalness:.45,roughness:.35}));platform.position.y=-.08;scene.add(platform);
+const ring=new THREE.Mesh(new THREE.TorusGeometry(1.02,.025,8,80),new THREE.MeshStandardMaterial({color:0xa9e7ff,emissive:0x183c78}));ring.rotation.x=Math.PI/2;ring.position.y=.005;scene.add(ring);
+const controls=new OrbitControls(camera,renderer.domElement);controls.enableDamping=true;controls.target.set(0,1,0);
+const loader=new GLTFLoader();loader.setMeshoptDecoder(MeshoptDecoder);
+let character=null,hairMaterials=[];
+const weaponGroup=new THREE.Group();scene.add(weaponGroup);
+function buildWeapon(type){
+ while(weaponGroup.children.length){const obj=weaponGroup.children[0];weaponGroup.remove(obj);obj.traverse(n=>{if(n.geometry)n.geometry.dispose();if(n.material){if(Array.isArray(n.material))n.material.forEach(m=>m.dispose());else n.material.dispose()}})}
+ if(type==='none')return;
+ const metal=new THREE.MeshStandardMaterial({color:type==='staff'?0x5d9dff:0xc9d9ec,metalness:.8,roughness:.22,emissive:type==='staff'?0x123b99:0x000000});
+ const dark=new THREE.MeshStandardMaterial({color:0x252b42,metalness:.25,roughness:.7});
+ if(type==='sword'){const blade=new THREE.Mesh(new THREE.BoxGeometry(.09,.9,.045),metal);blade.position.y=.35;weaponGroup.add(blade);const guard=new THREE.Mesh(new THREE.BoxGeometry(.36,.07,.09),metal);guard.position.y=-.12;weaponGroup.add(guard);const grip=new THREE.Mesh(new THREE.CylinderGeometry(.045,.045,.32,10),dark);grip.position.y=-.31;weaponGroup.add(grip)}
+ else if(type==='bow'){const curve=new THREE.CatmullRomCurve3([new THREE.Vector3(0,-.55,0),new THREE.Vector3(.22,-.3,0),new THREE.Vector3(.28,0,0),new THREE.Vector3(.22,.3,0),new THREE.Vector3(0,.55,0)]);const bow=new THREE.Mesh(new THREE.TubeGeometry(curve,28,.035,8,false),new THREE.MeshStandardMaterial({color:0xe5c36b,metalness:.25,roughness:.4}));weaponGroup.add(bow);const string=new THREE.Mesh(new THREE.CylinderGeometry(.008,.008,1.1,6),new THREE.MeshStandardMaterial({color:0xeaf5ff}));string.position.x=.01;weaponGroup.add(string)}
+ else if(type==='staff'){const pole=new THREE.Mesh(new THREE.CylinderGeometry(.035,.05,1.45,10),dark);weaponGroup.add(pole);const orb=new THREE.Mesh(new THREE.IcosahedronGeometry(.16,2),new THREE.MeshStandardMaterial({color:0x4abaff,emissive:0x1677ff,emissiveIntensity:1.8,metalness:.3,roughness:.15}));orb.position.y=.8;weaponGroup.add(orb)}
+ weaponGroup.position.set(1.05,1.05,.05);weaponGroup.rotation.z=type==='sword'?.18:0;
+}
+function findHairMaterials(root){hairMaterials=[];root.traverse(o=>{if(!o.isMesh)return;const mats=Array.isArray(o.material)?o.material:[o.material];const label=((o.name||'')+' '+mats.map(m=>m?.name||'').join(' ')).toLowerCase();if(/hair|bang|ponytail|hairstyle|cabello|fringe/.test(label))mats.forEach(m=>{if(m?.color)hairMaterials.push(m)})})}
+const savedKey='nashe-bloom-vestidor-nashael-v1';let state={hair:'#168cff',weapon:'bow'};
+try{const prior=JSON.parse(localStorage.getItem(savedKey)||'null');if(prior)state={...state,...prior}}catch{}
+function setPressed(container,attr,value){container.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset[attr]===value)))}
+function setHair(hex){state.hair=hex;setPressed(document.getElementById('hairOptions'),'hair',hex);if(hairMaterials.length)hairMaterials.forEach(m=>{m.color.set(hex);m.needsUpdate=true})}
+function setWeapon(type){state.weapon=type;setPressed(document.getElementById('weaponOptions'),'weapon',type);buildWeapon(type)}
+document.querySelectorAll('#hairOptions button').forEach(b=>b.addEventListener('click',()=>setHair(b.dataset.hair)));
+document.querySelectorAll('#weaponOptions button').forEach(b=>b.addEventListener('click',()=>setWeapon(b.dataset.weapon)));
+document.getElementById('save').addEventListener('click',()=>{try{localStorage.setItem(savedKey,JSON.stringify(state));document.getElementById('saved').textContent='Apariencia guardada en este dispositivo 💙'}catch{document.getElementById('saved').textContent='No se pudo guardar en este navegador.'}});
+document.getElementById('reset').addEventListener('click',()=>{state={hair:'#168cff',weapon:'bow'};setHair(state.hair);setWeapon(state.weapon);try{localStorage.removeItem(savedKey)}catch{}document.getElementById('saved').textContent='Elecciones restablecidas.'});
+function resize(){const w=mount.clientWidth,h=mount.clientHeight;if(!w||!h)return;camera.aspect=w/h;camera.updateProjectionMatrix();renderer.setSize(w,h,false)}
+window.addEventListener('resize',resize);resize();
+status.textContent='Visor iniciado. Cargando el archivo 3D…';
+loader.load('./nashael-arquera-cabello-azul.glb',g=>{
+ character=g.scene;scene.add(character);
+ const box=new THREE.Box3().setFromObject(character),size=box.getSize(new THREE.Vector3()),center=box.getCenter(new THREE.Vector3());
+ character.position.x-=center.x;character.position.z-=center.z;character.position.y-=box.min.y;
+ const maxDim=Math.max(size.x,size.y,size.z),scaleFactor=2.8/(maxDim||1);character.scale.setScalar(scaleFactor);
+ const scaledHeight=size.y*scaleFactor;controls.target.set(0,scaledHeight*.48,0);camera.position.set(0,scaledHeight*.62,Math.max(3.5,scaledHeight*1.65));camera.near=.01;camera.far=100;camera.updateProjectionMatrix();controls.minDistance=1.5;controls.maxDistance=10;controls.update();
+ findHairMaterials(character);setHair(state.hair);setWeapon(state.weapon);renderer.render(scene,camera);
+ status.textContent='Modelo 3D cargado. Si no lo ves, pulsa Restablecer y recarga la página.';
+},undefined,e=>{status.textContent='ERROR AL CARGAR EL MODELO: '+(e?.message||e?.type||'fallo desconocido')+'. Revisa el archivo GLB y su ruta.';console.error('Error cargando Nashael:',e)});
+function animate(){requestAnimationFrame(animate);controls.update();renderer.render(scene,camera)}animate();
+</script></body></html>
