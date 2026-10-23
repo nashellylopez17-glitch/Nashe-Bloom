@@ -18,17 +18,44 @@ button{border:1px solid #b5c7ff;background:#fff;color:#17367f;border-radius:22px
 .sectiontitle{font-size:20px;margin:0 0 5px}.task{display:flex;gap:10px;align-items:center;padding:12px 0;border-bottom:1px solid #dce3f6}.task:last-child{border-bottom:0}
 .task input[type=checkbox]{width:26px;height:26px;accent-color:#254ce2;flex-shrink:0;cursor:pointer;pointer-events:auto;position:relative;z-index:2}.task{cursor:pointer}.task button{position:relative;z-index:3}.taskbody{flex:1;min-width:0}.taskname{font-weight:750;overflow-wrap:anywhere}.taskdesc{font-size:12px;color:#68769a}.points{color:#244bd0;font-weight:800;white-space:nowrap}
 .formgrid{display:grid;grid-template-columns:1fr 90px;gap:9px;align-items:end}.formgrid .full{grid-column:1/-1}.hint{font-size:12px;color:#68769a}.status{font-size:13px;color:#53658c;margin:8px 0}
-#viewer{height:min(48vh,390px);min-height:260px;background:#101943;border-radius:20px;overflow:hidden;position:relative;border:1px solid #d9e4ff}.hero-subtitle{color:#e0e9ff}.hero-status{font-size:13px;color:#e0e9ff;margin:8px 0}.hero-hint{font-size:12px;color:#e0e9ff}canvas{display:block;width:100%;height:100%}.pill{position:absolute;top:12px;left:12px;background:#0a163dcc;border:1px solid #ffffff33;border-radius:22px;padding:8px 11px;font-size:11px;color:white;z-index:2}
+#viewer{height:min(48vh,390px);min-height:260px;background:#101943;border-radius:20px;overflow:hidden;position:relative;border:1px solid #d9e4ff}canvas{display:block;width:100%;height:100%}.pill{position:absolute;top:12px;left:12px;background:#0a163dcc;border:1px solid #ffffff33;border-radius:22px;padding:8px 11px;font-size:11px;color:white;z-index:2}
 .rewardgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:12px}.reward{border:1px solid #d6def4;border-radius:16px;padding:12px;background:#fff}.reward .emoji{font-size:26px}.reward strong{display:block;font-size:14px;margin:4px 0}.reward small{display:block;color:#6b789a;line-height:1.4}.reward.locked{background:#e7ebf7;color:#6f7894}.reward.unlocked{border-color:#6a8df0;background:#e8efff}.reward.equipped{box-shadow:0 0 0 2px #315de2 inset;background:#dfe9ff}.equip-status{font-size:12px;color:#244bd0;font-weight:800;margin-top:6px}
 #toast{font-size:13px;color:#2449bf;font-weight:700;min-height:20px;margin-top:8px}.note{font-size:12px;color:#657397;margin-top:12px}
 @media(min-width:620px){.rewardgrid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+
+/* Objetivos: módulo independiente, separado de los datos de hábitos */
+.objectives-calendar{margin-top:12px}
+.calendar-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:12px 0}
+.calendar-title{font-weight:850;color:#17367f;text-transform:capitalize}
+.calendar-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}
+.calendar-weekday{text-align:center;font-size:11px;font-weight:800;color:#68769a;padding:5px 0}
+.calendar-day{min-width:0;min-height:48px;padding:6px 2px;border-radius:12px;border:1px solid #d8e1f7;background:#fff;color:#17367f;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:4px;font-size:13px}
+.calendar-day.muted-day{opacity:.42}
+.calendar-day.selected-day{background:#244bd0;color:#fff;border-color:#244bd0}
+.calendar-day.today-day{box-shadow:inset 0 0 0 2px #79b8ff}
+.calendar-dots{display:flex;gap:3px;min-height:5px;justify-content:center;flex-wrap:wrap}
+.calendar-dot{width:5px;height:5px;border-radius:50%;background:#5a78e8}
+.selected-day .calendar-dot{background:#fff}
+.objective-item{display:flex;gap:10px;align-items:flex-start;padding:12px 0;border-bottom:1px solid #dce3f6}
+.objective-item:last-child{border-bottom:0}
+.objective-item input[type=checkbox]{width:23px;height:23px;accent-color:#244bd0;flex-shrink:0;margin-top:2px}
+.objective-main{flex:1;min-width:0}
+.objective-name{font-weight:800;overflow-wrap:anywhere}
+.objective-name.completed{text-decoration:line-through;opacity:.58}
+.objective-meta{font-size:12px;color:#68769a;margin-top:3px;overflow-wrap:anywhere}
+.objective-actions{display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end}
+.objective-form{margin-top:12px;padding:12px;background:#e8eeff;border-radius:16px}
+.objective-form input[type=text],.objective-form input[type=time],.objective-form textarea{width:100%;padding:12px;border:1px solid #c8d3f0;border-radius:13px;background:#fff;color:#172653;font:inherit;font-size:16px}
+.objective-form textarea{resize:vertical;min-height:70px}
+.objective-empty{padding:16px 0;color:#68769a;font-size:14px}
+
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
 </head>
 <body>
 <header><div class="logo">✦</div><div><h1>Nashe Bloom</h1><div class="tag">YOUR STORY AWAKENS</div></div></header>
 <main>
-<section class="hero"><div class="eyebrow">✦ TU PROGRESO, TU AVENTURA ✦</div><h2 id="heroTitle">Crea tu aventura</h2><p id="heroText">Crea tu perfil, añade hábitos a tu manera y desbloquea equipo para tu personaje.</p><h2 class="sectiontitle">🏹 <span id="modelCharacterName">Nashael</span></h2><p class="hero-subtitle">Tu arquera de aventura · arrastra para girar</p><div id="viewer"><div class="pill">VISOR 3D</div></div><div id="status" class="hero-status">Preparando personaje…</div><div class="row" style="flex-wrap:wrap;margin:10px 0"><span class="hero-hint" style="font-weight:800">Color de cabello:</span><button class="small hair-color" data-color="#1677ff" type="button">💙 Azul eléctrico</button><button class="small hair-color" data-color="#c6cbd6" type="button">🩶 Plateado</button><button class="small hair-color" data-color="#251b35" type="button">🖤 Negro</button><button class="small hair-color" data-color="#7b4de0" type="button">💜 Violeta</button></div><button id="spin" type="button">⟳ Girar automáticamente</button></section>
+<section class="hero"><div class="eyebrow">✦ TU PROGRESO, TU AVENTURA ✦</div><h2 id="heroTitle">Crea tu aventura</h2><p id="heroText">Crea tu perfil, añade hábitos a tu manera y desbloquea equipo para tu personaje.</p></section>
 <section class="card" id="profileCard">
 <h2>🪄 Crea tu perfil</h2><p class="muted">Prototipo local: el perfil y el progreso se guardan en este navegador, no en una cuenta online.</p>
 <label class="field" for="adventurerName">Nombre de aventurero</label><input id="adventurerName" type="text" maxlength="28" value="Aventurera">
@@ -55,11 +82,46 @@ button{border:1px solid #b5c7ff;background:#fff;color:#17367f;border-radius:22px
 <p class="hint">Usa «Editar» para cambiar el nombre, los XP o la frecuencia. Los hábitos de ejemplo se pueden editar; los personalizados también se pueden eliminar. Para que el progreso sea justo, cambiar un hábito no vuelve a dar XP por una tarea ya completada hoy.</p>
 <div id="habitList"></div><div id="toast" aria-live="polite"></div>
 </section>
-
+<section class="card"><h2 class="sectiontitle">🏹 <span id="modelCharacterName">Nashael</span></h2><p class="muted">Modelo 3D base · arrastra para girar</p><div id="viewer"><div class="pill">VISOR 3D</div></div><div id="status" class="status">Preparando personaje…</div><div class="row" style="flex-wrap:wrap;margin:10px 0"><span class="hint" style="font-weight:800">Color de cabello (vista previa):</span><button class="small hair-color" data-color="#1677ff" type="button">💙 Azul eléctrico</button><button class="small hair-color" data-color="#c6cbd6" type="button">🩶 Plateado</button><button class="small hair-color" data-color="#251b35" type="button">🖤 Negro</button><button class="small hair-color" data-color="#7b4de0" type="button">💜 Violeta</button></div><p class="hint">La vista previa cambia el color de los materiales del cabello que detecta el modelo; si el modelo comparte materiales con otras piezas, también podrían cambiar.</p><button id="spin">⟳ Girar automáticamente</button></section>
 <section class="card">
 <h2 class="sectiontitle">🎁 Vestidor y equipo</h2><p class="muted">Completa hábitos para ganar XP. Las piezas se desbloquean por nivel y puedes equipar una recompensa disponible. En esta versión, equipar se guarda como selección; el cambio visual sobre el modelo 3D se conectará después.</p>
 <div id="rewards" class="rewardgrid"></div><p class="note">El cabello, la ropa, las botas y las armas necesitarán piezas 3D compatibles para aparecer realmente sobre el personaje. Esta versión prepara el catálogo, los desbloqueos y el equipo seleccionado.</p>
 </section>
+
+<section class="card" id="objectivesCard">
+  <div class="row between" style="align-items:flex-start">
+    <div><h2 class="sectiontitle">🗓️ Objetivos</h2><p class="muted">Organiza lo que quieres hacer cada día. Un paso a la vez 💙</p></div>
+    <span class="level" id="objectiveMonthCount">0 pendientes</span>
+  </div>
+  <div class="objectives-calendar">
+    <div class="calendar-head">
+      <button class="small" id="objectivePrevMonth" type="button" aria-label="Mes anterior">‹</button>
+      <div class="calendar-title" id="objectiveMonthLabel">Mes</div>
+      <button class="small" id="objectiveNextMonth" type="button" aria-label="Mes siguiente">›</button>
+    </div>
+    <div class="calendar-grid" id="objectiveCalendar">
+      <div class="calendar-weekday">L</div><div class="calendar-weekday">M</div><div class="calendar-weekday">X</div><div class="calendar-weekday">J</div><div class="calendar-weekday">V</div><div class="calendar-weekday">S</div><div class="calendar-weekday">D</div>
+    </div>
+  </div>
+  <div style="margin-top:16px;padding-top:12px;border-top:1px solid #dce3f6">
+    <div class="row between" style="align-items:flex-start"><h3 style="font-size:17px;margin:0" id="objectiveSelectedDate">Objetivos del día</h3><button class="small primary" id="objectiveAddButton" type="button">＋ Agregar</button></div>
+    <div id="objectiveList"></div>
+    <form id="objectiveForm" class="objective-form hidden">
+      <label class="field" for="objectiveName">¿Qué quieres hacer?</label>
+      <input id="objectiveName" type="text" maxlength="100" placeholder="Ej. Preparar mi ropa para mañana" required>
+      <label class="field" for="objectiveTime">Hora (opcional)</label>
+      <input id="objectiveTime" type="time">
+      <label class="field" for="objectiveNotes">Notas (opcional)</label>
+      <textarea id="objectiveNotes" maxlength="300" placeholder="Detalles o recordatorios"></textarea>
+      <div class="row" style="flex-wrap:wrap;margin-top:10px">
+        <button class="primary" type="submit" id="objectiveSaveButton">Guardar objetivo</button>
+        <button type="button" id="objectiveCancelButton">Cancelar</button>
+      </div>
+    </form>
+    <p class="hint">Los objetivos se guardan en este navegador por separado de tus hábitos. Puedes añadir, editar, completar o eliminar cada uno.</p>
+  </div>
+</section>
+
 </section>
 </main><footer style="text-align:center;padding:0 12px 20px;color:#d7e4ff;font-size:12px">Nashe Bloom · Un paso real a la vez 💙</footer>
 <script>
@@ -170,5 +232,152 @@ document.querySelectorAll('.hair-color').forEach(btn=>btn.addEventListener('clic
 draco.setDecoderPath('https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/libs/draco/');loader.setDRACOLoader(draco);loader.setMeshoptDecoder(MeshoptDecoder);
 loader.load('./nashael-arquera-cabello-azul.glb',g=>{model=g.scene;model.updateMatrixWorld(true);const b=new THREE.Box3().setFromObject(model),size=b.getSize(new THREE.Vector3()),max=Math.max(size.x,size.y,size.z);if(max>0)model.scale.setScalar(2.45/max);model.updateMatrixWorld(true);const b2=new THREE.Box3().setFromObject(model),c=b2.getCenter(new THREE.Vector3());model.position.x-=c.x;model.position.y-=c.y;model.position.z-=c.z;model.updateMatrixWorld(true);scene.add(model);const b3=new THREE.Box3().setFromObject(model);model.position.y-=b3.min.y;controls.target.set(0,1.05,0);controls.update();status.textContent='¡Personaje cargado! Arrastra para girarlo.';let savedLook=null;try{savedLook=localStorage.getItem(LOOK_KEY)}catch(e){}if(savedLook)applyHairColor(savedLook);},p=>{if(p.total)status.textContent='Cargando personaje… '+Math.round(p.loaded/p.total*100)+'%';},e=>{console.error(e);status.textContent='No se pudo cargar el modelo 3D. Revisa que el GLB siga en la raíz del repositorio.'});
 document.getElementById('spin').addEventListener('click',()=>{spinning=!spinning;document.getElementById('spin').textContent=spinning?'⏸ Detener giro':'⟳ Girar automáticamente'});function animate(){requestAnimationFrame(animate);if(spinning&&model)model.rotation.y+=.006;controls.update();renderer.render(scene,camera)}animate();new ResizeObserver(()=>{const w=box.clientWidth,h=box.clientHeight;camera.aspect=w/h;camera.updateProjectionMatrix();renderer.setSize(w,h)}).observe(box);
+
+/* ===== Objetivos con calendario: almacenamiento independiente ===== */
+const OBJECTIVES_KEY='nasheBloom_objectives_calendar_v1';
+let objectiveItems=[];
+try {
+  const storedObjectives=JSON.parse(localStorage.getItem(OBJECTIVES_KEY)||'[]');
+  objectiveItems=Array.isArray(storedObjectives)?storedObjectives:[];
+} catch(e) { objectiveItems=[]; }
+let objectiveSelected=localDateKey(new Date());
+let objectiveMonth=new Date(new Date().getFullYear(),new Date().getMonth(),1);
+let objectiveEditingId=null;
+
+function localDateKey(date){
+  return date.getFullYear()+'-'+String(date.getMonth()+1).padStart(2,'0')+'-'+String(date.getDate()).padStart(2,'0');
+}
+function parseLocalDate(key){
+  const parts=key.split('-').map(Number);
+  return new Date(parts[0],parts[1]-1,parts[2],12,0,0,0);
+}
+function saveObjectives(){
+  try { localStorage.setItem(OBJECTIVES_KEY,JSON.stringify(objectiveItems)); }
+  catch(e) { alert('No se pudieron guardar los objetivos. Revisa el espacio disponible en el navegador.'); }
+}
+function objectiveEsc(value){
+  return String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function objectivesForDate(key){
+  return objectiveItems.filter(item=>item.date===key).sort((a,b)=>(a.time||'99:99').localeCompare(b.time||'99:99'));
+}
+function renderObjectiveCalendar(){
+  const grid=document.getElementById('objectiveCalendar');
+  if(!grid)return;
+  grid.querySelectorAll('.calendar-day').forEach(el=>el.remove());
+  const year=objectiveMonth.getFullYear(), month=objectiveMonth.getMonth();
+  document.getElementById('objectiveMonthLabel').textContent=objectiveMonth.toLocaleDateString('es-MX',{month:'long',year:'numeric'});
+  const first=new Date(year,month,1);
+  const offset=(first.getDay()+6)%7;
+  const daysInMonth=new Date(year,month+1,0).getDate();
+  const prevDays=new Date(year,month,0).getDate();
+  const todayKey=localDateKey(new Date());
+  for(let i=0;i<42;i++){
+    let date,belongs=true;
+    if(i<offset){date=new Date(year,month-1,prevDays-offset+i+1);belongs=false;}
+    else if(i>=offset+daysInMonth){date=new Date(year,month+1,i-offset-daysInMonth+1);belongs=false;}
+    else date=new Date(year,month,i-offset+1);
+    const key=localDateKey(date);
+    const items=objectivesForDate(key);
+    const btn=document.createElement('button');
+    btn.type='button';
+    btn.className='calendar-day'+(!belongs?' muted-day':'')+(key===objectiveSelected?' selected-day':'')+(key===todayKey?' today-day':'');
+    btn.setAttribute('aria-label',date.toLocaleDateString('es-MX',{day:'numeric',month:'long',year:'numeric'})+(items.length?`, ${items.length} objetivos`:''));
+    btn.innerHTML=`<span>${date.getDate()}</span><span class="calendar-dots">${items.slice(0,4).map(()=>'<i class="calendar-dot"></i>').join('')}</span>`;
+    btn.addEventListener('click',()=>{
+      objectiveSelected=key;
+      if(date.getMonth()!==objectiveMonth.getMonth()||date.getFullYear()!==objectiveMonth.getFullYear()) objectiveMonth=new Date(date.getFullYear(),date.getMonth(),1);
+      hideObjectiveForm();
+      renderObjectives();
+    });
+    grid.appendChild(btn);
+  }
+}
+function renderObjectiveList(){
+  const list=document.getElementById('objectiveList');
+  const d=parseLocalDate(objectiveSelected);
+  document.getElementById('objectiveSelectedDate').textContent='Objetivos · '+d.toLocaleDateString('es-MX',{weekday:'long',day:'numeric',month:'long'});
+  const items=objectivesForDate(objectiveSelected);
+  if(!items.length){
+    list.innerHTML='<div class="objective-empty">Todavía no tienes objetivos para este día. Pulsa “＋ Agregar” para empezar. 🌱</div>';
+  }else{
+    list.innerHTML=items.map(item=>`
+      <div class="objective-item">
+        <input type="checkbox" data-objective-done="${objectiveEsc(item.id)}" ${item.done?'checked':''} aria-label="Marcar objetivo como completado">
+        <div class="objective-main">
+          <div class="objective-name ${item.done?'completed':''}">${objectiveEsc(item.name)}</div>
+          ${item.time?`<div class="objective-meta">🕒 ${objectiveEsc(item.time)}</div>`:''}
+          ${item.notes?`<div class="objective-meta">${objectiveEsc(item.notes)}</div>`:''}
+          <div class="objective-actions" style="margin-top:7px;justify-content:flex-start">
+            <button class="small" type="button" data-objective-edit="${objectiveEsc(item.id)}">Editar</button>
+            <button class="small danger" type="button" data-objective-delete="${objectiveEsc(item.id)}">Eliminar</button>
+          </div>
+        </div>
+      </div>`).join('');
+  }
+  list.querySelectorAll('[data-objective-done]').forEach(input=>input.addEventListener('change',()=>{
+    const item=objectiveItems.find(x=>x.id===input.dataset.objectiveDone);
+    if(item){item.done=input.checked;saveObjectives();renderObjectives();}
+  }));
+  list.querySelectorAll('[data-objective-edit]').forEach(button=>button.addEventListener('click',()=>showObjectiveForm(button.dataset.objectiveEdit)));
+  list.querySelectorAll('[data-objective-delete]').forEach(button=>button.addEventListener('click',()=>{
+    const item=objectiveItems.find(x=>x.id===button.dataset.objectiveDelete);
+    if(item&&confirm(`¿Eliminar el objetivo “${item.name}”?`)){objectiveItems=objectiveItems.filter(x=>x.id!==item.id);saveObjectives();renderObjectives();}
+  }));
+  const monthPrefix=localDateKey(new Date(objectiveMonth.getFullYear(),objectiveMonth.getMonth(),1)).slice(0,7);
+  const monthItems=objectiveItems.filter(x=>x.date&&x.date.startsWith(monthPrefix));
+  const pending=monthItems.filter(x=>!x.done).length;
+  document.getElementById('objectiveMonthCount').textContent=`${pending} pendiente${pending===1?'':'s'}`;
+}
+function renderObjectives(){renderObjectiveCalendar();renderObjectiveList();}
+function showObjectiveForm(id=null){
+  const form=document.getElementById('objectiveForm');
+  objectiveEditingId=id;
+  form.classList.remove('hidden');
+  document.getElementById('objectiveName').value='';
+  document.getElementById('objectiveTime').value='';
+  document.getElementById('objectiveNotes').value='';
+  if(id){
+    const item=objectiveItems.find(x=>x.id===id);
+    if(item){
+      document.getElementById('objectiveName').value=item.name||'';
+      document.getElementById('objectiveTime').value=item.time||'';
+      document.getElementById('objectiveNotes').value=item.notes||'';
+      document.getElementById('objectiveSaveButton').textContent='Guardar cambios';
+    }
+  }else{
+    document.getElementById('objectiveSaveButton').textContent='Guardar objetivo';
+  }
+  document.getElementById('objectiveName').focus();
+}
+function hideObjectiveForm(){
+  document.getElementById('objectiveForm').classList.add('hidden');
+  objectiveEditingId=null;
+}
+document.getElementById('objectivePrevMonth').addEventListener('click',()=>{
+  objectiveMonth=new Date(objectiveMonth.getFullYear(),objectiveMonth.getMonth()-1,1);renderObjectives();
+});
+document.getElementById('objectiveNextMonth').addEventListener('click',()=>{
+  objectiveMonth=new Date(objectiveMonth.getFullYear(),objectiveMonth.getMonth()+1,1);renderObjectives();
+});
+document.getElementById('objectiveAddButton').addEventListener('click',()=>showObjectiveForm());
+document.getElementById('objectiveCancelButton').addEventListener('click',hideObjectiveForm);
+document.getElementById('objectiveForm').addEventListener('submit',event=>{
+  event.preventDefault();
+  const name=document.getElementById('objectiveName').value.trim();
+  if(!name){document.getElementById('objectiveName').focus();return;}
+  const time=document.getElementById('objectiveTime').value;
+  const notes=document.getElementById('objectiveNotes').value.trim();
+  if(objectiveEditingId){
+    const item=objectiveItems.find(x=>x.id===objectiveEditingId);
+    if(item){item.name=name;item.time=time;item.notes=notes;}
+  }else{
+    objectiveItems.push({id:'obj_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,7),date:objectiveSelected,name,time,notes,done:false,createdAt:new Date().toISOString()});
+  }
+  saveObjectives();hideObjectiveForm();renderObjectives();
+});
+renderObjectives();
+/* ===== Fin del módulo Objetivos ===== */
+
 </script>
 </body></html>
