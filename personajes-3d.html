@@ -7,81 +7,131 @@
 <title>Nashe Bloom - Personajes</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#07152f;color:#eaf4ff;font-family:Arial,sans-serif;text-align:center}
-h1{color:#55baff;margin:22px 8px 8px}
+body{margin:0;background:#07152f;color:#eaf4ff;font-family:Arial,sans-serif}
+header{text-align:center;padding:20px 12px}
+h1{color:#55baff;margin:8px}
 p{color:#b9d9ff}
-.buttons{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;padding:10px}
-button{background:#123d70;color:white;border:1px solid #55baff;border-radius:12px;padding:13px 16px;font-size:15px}
-button:active{background:#087dcc}
-#scene{width:100%;height:58vh;min-height:300px}
-#status{padding:12px;color:#b9d9ff}
+#xp{font-size:18px;color:#fff}
+#collection{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;padding:12px}
+.card{background:#102b55;border:1px solid #24558b;border-radius:16px;padding:10px;text-align:center}
+.card button{width:100%;padding:12px;background:#164578;color:white;border:1px solid #55baff;border-radius:10px}
+.card button:disabled{opacity:.65;border-color:#60718b}
+.card small{display:block;color:#b9d9ff;margin:8px 0}
+#scene{height:52vh;min-height:300px;width:100%}
+#status{text-align:center;padding:12px;color:#b9d9ff}
+#viewer{background:#0b2042;margin:12px;border-radius:16px;overflow:hidden}
+#viewer h2{text-align:center;color:#55baff}
+#back{display:block;margin:12px auto;padding:12px 20px;background:#123d70;color:white;border:1px solid #55baff;border-radius:10px}
 </style>
+<script type="importmap">
+{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}
+</script>
 </head>
 <body>
+<header>
 <h1>NASHE BLOOM</h1>
-<p>Elige tu personaje</p>
-<div class="buttons">
-<button onclick="loadCharacter('arquera')">🏹 Arquera</button>
-<button onclick="loadCharacter('guerrera')">🛡️ Guerrera</button>
-<button onclick="loadCharacter('maga')">✨ Maga</button>
-</div>
+<p>Tu aventura, tu colección ✨</p>
+<div id="xp">Experiencia: 0 XP</div>
+<p>Desbloquea personajes cada 30 XP</p>
+</header>
+<section id="collection"></section>
+<section id="viewer" hidden>
+<h2 id="chosen">Tu personaje</h2>
 <div id="scene"></div>
-<div id="status">Preparando personajes...</div>
-
-<script type="importmap">
-{
-  "imports": {
-"three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
-"three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
-  }
-}
-</script>
+<div id="status">Preparando visor 3D...</div>
+<button id="back" onclick="closeViewer()">Volver a la colección</button>
+</section>
 <script type="module">
-import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js';
-import {GLTFLoader} from 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/loaders/GLTFLoader.js';
-import {OrbitControls} from 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/controls/OrbitControls.js';
-  import {MeshoptDecoder} from 'three/addons/libs/meshopt_decoder.module.js';
+import * as THREE from 'three';
+import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
+import {MeshoptDecoder} from 'three/addons/libs/meshopt_decoder.module.js';
 
-const scene=new THREE.Scene();
-scene.background=new THREE.Color(0x07152f);
-const camera=new THREE.PerspectiveCamera(45,1,0.1,1000);
-camera.position.set(0,1.5,5);
-const renderer=new THREE.WebGLRenderer({antialias:true});
-renderer.setPixelRatio(Math.min(devicePixelRatio,2));
-renderer.outputColorSpace=THREE.SRGBColorSpace;
-document.getElementById('scene').appendChild(renderer.domElement);
-renderer.domElement.style.width='100%';
-renderer.domElement.style.height='100%';
+const models=[
+ {name:'Nashael',file:'nashael-arquera-cabello-azul.glb',cost:0},
+ {name:'Elfa maga elegante',file:'aiprintgen_Elegant Elf Sorceress 3D Model-preview.glb',cost:30},
+ {name:'Arquera elfa',file:'aiprintgen_Elf Archeress with Bow and Arrow-preview.glb',cost:60},
+ {name:'Pícara elfa oscura',file:'aiprintgen_Dark Elf Rogue with Dagger-preview.glb',cost:90},
+ {name:'Arquera trenzada',file:'aiprintgen_Elf Archer Miniature with Braided Hair-preview.glb',cost:120},
+ {name:'Elfa de capa verde',file:'aiprintgen_Elf Rogue with Green Cloak and Leather Pouches-preview.glb',cost:150},
+ {name:'Dama de rojo',file:'aiprintgen_Elegant Elf Woman in Red Gown with High Slit-preview.glb',cost:180},
+ {name:'Maga con bastón',file:'aiprintgen_Anime Elf Mage with Staff Figurine-preview (2).glb',cost:210},
+ {name:'Exploradora élfica',file:'aiprintgen_Elven Ranger with Hood and Bow-preview.glb',cost:240},
+ {name:'Elfa steampunk',file:'aiprintgen_Steampunk Elf Girl with Goggles-preview.glb',cost:270},
+ {name:'Agente',file:'aiprintgen_Девушка-агент с пистолетом-preview.glb',cost:300},
+ {name:'Chica escolar',file:'aiprintgen_Anime Girl in School Uniform with Thigh-Highs-preview.glb',cost:330},
+ {name:'Guerrera de dos espadas',file:'aiprintgen_Dark Elf Warrior with Dual Swords-preview.glb',cost:360}
+];
 
-scene.add(new THREE.HemisphereLight(0xc4e5ff,0x17213d,2));
-const light=new THREE.DirectionalLight(0xffffff,2.5);
-light.position.set(3,5,5);
-scene.add(light);
-const platform=new THREE.Mesh(
- new THREE.CylinderGeometry(1.2,1.35,0.15,48),
- new THREE.MeshStandardMaterial({color:0x174b80,metalness:0.5,roughness:0.35})
-);
-platform.position.y=-0.08;
-scene.add(platform);
+function getXP(){
+ const value=Number(localStorage.getItem('nasheBloomXP'));
+ return Number.isFinite(value)&&value>=0?value:0;
+}
+let xp=getXP();
+const collection=document.getElementById('collection');
+document.getElementById('xp').textContent=`Experiencia: ${xp} XP`;
 
-const controls=new OrbitControls(camera,renderer.domElement);
-controls.enableDamping=true;
-controls.target.set(0,1,0);
+models.forEach((m,i)=>{
+ const card=document.createElement('article');
+ card.className='card';
+ const title=document.createElement('h3');
+ title.textContent=m.name;
+ const info=document.createElement('small');
+ const unlocked=xp>=m.cost;
+ info.textContent=unlocked?'🔓 Disponible':`🔒 Necesitas ${m.cost} XP`;
+ const button=document.createElement('button');
+ button.textContent=unlocked?'Ver personaje 3D':'Bloqueado';
+ button.disabled=!unlocked;
+ button.onclick=()=>showCharacter(i);
+ card.append(title,info,button);
+ collection.appendChild(card);
+});
+
+let scene,camera,renderer,controls,current;
 const loader=new GLTFLoader();
-  loader.setMeshoptDecoder(MeshoptDecoder);
-let current=null;
+loader.setMeshoptDecoder(MeshoptDecoder);
 let request=0;
 
-const models={
- arquera:'nashael-arquera-cabello-azul.glb',
- guerrera:'aiprintgen_Fantasy Warrior Woman with Horns and Sword-preview.glb',
- maga:'aiprintgen_Anime Elf Mage with Staff Figurine-preview.glb'
-};
-
-window.loadCharacter=async function(name){
+function setup(){
+ if(renderer)return;
+ scene=new THREE.Scene();
+ scene.background=new THREE.Color(0x07152f);
+ camera=new THREE.PerspectiveCamera(45,1,.1,1000);
+ camera.position.set(0,1.5,5);
+ renderer=new THREE.WebGLRenderer({antialias:true});
+ renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+ renderer.outputColorSpace=THREE.SRGBColorSpace;
+ const el=document.getElementById('scene');
+ el.appendChild(renderer.domElement);
+ renderer.domElement.style.width='100%';
+ renderer.domElement.style.height='100%';
+ scene.add(new THREE.HemisphereLight(0xc4e5ff,0x17213d,2));
+ const light=new THREE.DirectionalLight(0xffffff,2.5);
+ light.position.set(3,5,5);scene.add(light);
+ controls=new OrbitControls(camera,renderer.domElement);
+ controls.enableDamping=true;
+ controls.target.set(0,1,0);
+ function resize(){
+  const el=document.getElementById('scene');
+  if(!el.clientWidth)return;
+  camera.aspect=el.clientWidth/el.clientHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(el.clientWidth,el.clientHeight,false);
+ }
+ window.addEventListener('resize',resize);
+ resize();
+ function animate(){requestAnimationFrame(animate);controls.update();renderer.render(scene,camera)}
+ animate();
+}
+window.showCharacter=function(i){
+ if(getXP()<models[i].cost)return;
+ document.getElementById('viewer').hidden=false;
+ document.getElementById('collection').hidden=true;
+ document.getElementById('chosen').textContent=models[i].name;
+ setup();
  const id=++request;
- document.getElementById('status').textContent='Cargando '+name+'...';
- loader.load(encodeURI(models[name]),g=>{
+ document.getElementById('status').textContent='Cargando modelo 3D...';
+ loader.load(encodeURI(models[i].file),g=>{
   if(id!==request)return;
   if(current)scene.remove(current);
   current=g.scene;
@@ -92,30 +142,21 @@ window.loadCharacter=async function(name){
   current.position.z-=center.z;
   current.position.y-=box.min.y;
   const max=Math.max(size.x,size.y,size.z);
-  const scale=2.8/(max||1);
-  current.scale.setScalar(scale);
+  current.scale.setScalar(2.8/(max||1));
   scene.add(current);
-  controls.target.set(0,size.y*scale*0.5,0);
-  camera.position.set(0,size.y*scale*0.65+1.2,Math.max(3.5,max*scale*2.2));
+  controls.target.set(0,size.y*.5,0);
+  camera.position.set(0,size.y*.65+1.2,Math.max(3.5,max*2.2));
   controls.update();
-  document.getElementById('status').textContent=name+' lista 💙 Arrastra para girar.';
+  document.getElementById('status').textContent='¡Listo! Arrastra para girar 💙';
  },undefined,e=>{
-  if(id===request)document.getElementById('status').textContent='Error: '+(e.message||e.type||JSON.stringify(e));
-});
-
-function resize(){
- const el=document.getElementById('scene');
- const w=el.clientWidth,h=el.clientHeight;
- camera.aspect=w/h;
- camera.updateProjectionMatrix();
- renderer.setSize(w,h,false);
-}
-window.addEventListener('resize',resize);
-resize();
-function animate(){requestAnimationFrame(animate);controls.update();renderer.render(scene,camera)}
-animate();
-loadCharacter('arquera');
+  document.getElementById('status').textContent='No se pudo cargar este modelo. Revisa el nombre del archivo.';
+ });
+};
+window.closeViewer=function(){
+ request++;
+ document.getElementById('viewer').hidden=true;
+ document.getElementById('collection').hidden=false;
+};
 </script>
 </body>
 </html>
-
