@@ -149,7 +149,7 @@ window.showCharacter=function(i){
   controls.update();
   document.getElementById('status').textContent='¡Listo! Arrastra para girar 💙';
  },undefined,e=>{
-  document.getElementById('status').textContent='No se pudo cargar este modelo. Revisa el nombre del archivo.';
+   document.getElementById('status').textContent='Error: '+(e&&e.message?e.message:String(e));
  });
 };
 window.closeViewer=function(){
