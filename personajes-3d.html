@@ -135,18 +135,25 @@ window.showCharacter=function(i){
   if(id!==request)return;
   if(current)scene.remove(current);
   current=g.scene;
-  const box=new THREE.Box3().setFromObject(current);
-  const size=box.getSize(new THREE.Vector3());
-  const center=box.getCenter(new THREE.Vector3());
-  current.position.x-=center.x;
-  current.position.z-=center.z;
-  current.position.y-=box.min.y;
-  const max=Math.max(size.x,size.y,size.z);
-  current.scale.setScalar(2.8/(max||1));
-  scene.add(current);
-  controls.target.set(0,size.y*.5,0);
-  camera.position.set(0,size.y*.65+1.2,Math.max(3.5,max*2.2));
-  controls.update();
+
+const box=new THREE.Box3().setFromObject(current);
+const size=box.getSize(new THREE.Vector3());
+const max=Math.max(size.x,size.y,size.z);
+current.scale.setScalar(2.8/(max||1));
+current.updateMatrixWorld(true);
+const scaledBox=new THREE.Box3().setFromObject(current);
+const scaledSize=scaledBox.getSize(new THREE.Vector3());
+const center=scaledBox.getCenter(new THREE.Vector3());
+current.position.x-=center.x;
+current.position.z-=center.z;
+current.position.y-=scaledBox.min.y;
+scene.add(current);
+controls.target.set(0,scaledSize.y*.5,0);
+camera.position.set(0,scaledSize.y*.65+0.5,Math.max(3.5,Math.max(scaledSize.x,scaledSize.y,scaledSize.z)*2.2));
+camera.near=0.01;
+camera.far=100;
+camera.updateProjectionMatrix();
+controls.update();
   document.getElementById('status').textContent='¡Listo! Arrastra para girar 💙';
  },undefined,e=>{
   document.getElementById('status').textContent='Error: '+(e&&e.message?e.message:String(e));
