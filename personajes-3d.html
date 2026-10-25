@@ -156,7 +156,7 @@ camera.updateProjectionMatrix();
 controls.update();
   document.getElementById('status').textContent='¡Listo! Arrastra para girar 💙';
  },undefined,e=>{
-  document.getElementById('status').textContent='Error: '+(e&&e.message?e.message:String(e));
+  document.getElementById('status').textContent='Error al cargar: '+(e && e.message ? e.message : String(e));
  });
 };
 window.closeViewer=function(){
