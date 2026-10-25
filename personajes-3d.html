@@ -133,28 +133,68 @@ window.showCharacter=function(i){
  document.getElementById('status').textContent='Cargando modelo 3D...';
  loader.load(encodeURI(models[i].file),g=>{
   if(id!==request)return;
-  if(current)scene.remove(current);
-  current=g.scene;
+  
+if(current) scene.remove(current);
 
-const box=new THREE.Box3().setFromObject(current);
-const size=box.getSize(new THREE.Vector3());
-const max=Math.max(size.x,size.y,size.z);
-current.scale.setScalar(2.8/(max||1));
+current = g.scene;
+current.position.set(0, 0, 0);
+current.scale.set(1, 1, 1);
 current.updateMatrixWorld(true);
-const scaledBox=new THREE.Box3().setFromObject(current);
-const scaledSize=scaledBox.getSize(new THREE.Vector3());
-const center=scaledBox.getCenter(new THREE.Vector3());
-current.position.x-=center.x;
-current.position.z-=center.z;
-current.position.y-=scaledBox.min.y;
+
+const box = new THREE.Box3().setFromObject(current);
+const size = box.getSize(new THREE.Vector3());
+const center = box.getCenter(new THREE.Vector3());
+const maxDim = Math.max(size.x, size.y, size.z);
+
+if (!Number.isFinite(maxDim) || maxDim <= 0) {
+  document.getElementById('status').textContent =
+    'El archivo se abrió, pero no contiene un modelo visible.';
+  return;
+}
+
+current.scale.setScalar(2.5 / maxDim);
+current.updateMatrixWorld(true);
+
+const scaledBox = new THREE.Box3().setFromObject(current);
+const scaledCenter = scaledBox.getCenter(new THREE.Vector3());
+const scaledSize = scaledBox.getSize(new THREE.Vector3());
+
+current.position.x -= scaledCenter.x;
+current.position.y -= scaledBox.min.y;
+current.position.z -= scaledCenter.z;
+
+current.traverse((obj) => {
+  if (obj.isMesh) {
+    obj.visible = true;
+    if (obj.material) {
+      const materials = Array.isArray(obj.material)
+        ? obj.material
+        : [obj.material];
+      materials.forEach((mat) => {
+        mat.visible = true;
+        mat.needsUpdate = true;
+      });
+    }
+  }
+});
+
 scene.add(current);
-controls.target.set(0,scaledSize.y*.5,0);
-camera.position.set(0,scaledSize.y*.65+0.5,Math.max(3.5,Math.max(scaledSize.x,scaledSize.y,scaledSize.z)*2.2));
-camera.near=0.01;
-camera.far=100;
+
+const height = Math.max(scaledSize.y, 1);
+controls.target.set(0, height / 2, 0);
+camera.position.set(0, height * 0.65, Math.max(3.5, height * 2.2));
+camera.near = 0.01;
+camera.far = 1000;
 camera.updateProjectionMatrix();
 controls.update();
-  document.getElementById('status').textContent='¡Listo! Arrastra para girar 💙';
+
+const canvas = renderer.domElement;
+const container = document.getElementById('scene');
+renderer.setSize(container.clientWidth, container.clientHeight);
+renderer.render(scene, camera);
+
+document.getElementById('status').textContent =
+  '¡Modelo cargado! Arrastra para girar 💙';
  },undefined,e=>{
   document.getElementById('status').textContent='Error al cargar: '+(e && e.message ? e.message : String(e));
  });
